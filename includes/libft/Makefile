@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/12 15:01:45 by saibelab          #+#    #+#              #
-#    Updated: 2025/07/02 14:42:10 by saibelab         ###   ########.fr        #
+#    Updated: 2025/11/14 17:06:15 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ ft_isalpha.c \
 ft_isascii.c \
 ft_isdigit.c \
 ft_isprint.c \
+ft_iswhitespace.c \
 ft_memchr.c \
 ft_memcmp.c \
 ft_memcpy.c \

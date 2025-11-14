@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/11/14 16:43:32 by saibelab         ###   ########.fr        #
+#    Updated: 2025/11/14 17:12:55 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,8 @@ CFLAGS			= -Wall -Wextra -Werror -g3 -Ilibft/includes -Iincludes
 LDFLAGS			= -lreadline
 
 SRCS			= src/main.c src/history.c src/environement.c
-BONUS_SRCS		= src/main_bonus.c src/history_bonus.c src/environement_bonus.c
 
 OBJS			= $(SRCS:.c=.o)
-BONUS_OBJS		= $(BONUS_SRCS:.c=.o)
 
 LIBFT_PATH		= includes/libft
 LIBFT			= $(LIBFT_PATH)/libft.a

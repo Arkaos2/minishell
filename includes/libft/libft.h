@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/13 20:00:54 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:09:01 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ void			print_percent(va_list param, int *count);
 void			print_hex_lower(va_list param, int *count);
 void			print_hex_upper(va_list param, int *count);
 void			print_pointer(va_list param, int *count);
+int				ft_is_whitespace(char s);
+int				ft_strncmp_custom(const char *s1, const char *s2, size_t n);
 
 void			*ft_memchr(const void *arr, int c, size_t n);
 void			*ft_calloc(size_t elementCount, size_t elementSize);

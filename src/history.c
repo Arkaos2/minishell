@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:23:51 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 16:44:54 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:43:09 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ int	is_whitespace(char *s)
 int	readline_check(t_envp *env)
 {
 	char	*input;
+	t_envp *head = env;
 
-	while (1)
+	while(1)
 	{
+		env = head;
 		input = readline("minishell: ");
 		if (!input)
 			break;
@@ -44,7 +46,9 @@ int	readline_check(t_envp *env)
 		}
 		if (!is_whitespace(input))
 			add_history(input);
-		if(ft_strncmp("env", input, 3) == 0)
+		else
+			continue;
+		if(ft_strncmp_custom("env", input, 3) == 0)
 		{
 			while(env->next != NULL)
 			{
