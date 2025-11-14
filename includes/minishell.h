@@ -7,6 +7,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 # include "libft/libft.h"
+# include "ft_fprintf/ft_fprintf.h"
 
 
 typedef struct s_envp

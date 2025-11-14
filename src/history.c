@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:23:51 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 15:53:15 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:44:54 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	readline_check(t_envp *env)
 		{
 			while(env->next != NULL)
 			{
-				printf("%s%s\n", env->key, env->value);
+				ft_fprintf(1 ,"%s%s\n", env->key, env->value);
 				env = env->next;
 			}
 		}

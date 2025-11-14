@@ -6,40 +6,50 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/11/14 15:16:24 by saibelab         ###   ########.fr        #
+#    Updated: 2025/11/14 16:43:32 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= minishell
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3 -Ilibft/includes -Iincludes
-LDFLAGS		= -lreadline
+NAME			= minishell
+CC				= cc
+CFLAGS			= -Wall -Wextra -Werror -g3 -Ilibft/includes -Iincludes
+LDFLAGS			= -lreadline
 
-SRCS		= src/main.c src/history.c src/environement.c
+SRCS			= src/main.c src/history.c src/environement.c
+BONUS_SRCS		= src/main_bonus.c src/history_bonus.c src/environement_bonus.c
 
-OBJS		= $(SRCS:.c=.o)
+OBJS			= $(SRCS:.c=.o)
+BONUS_OBJS		= $(BONUS_SRCS:.c=.o)
 
-LIBFT_PATH	= includes/libft
-LIBFT		= $(LIBFT_PATH)/libft.a
+LIBFT_PATH		= includes/libft
+LIBFT			= $(LIBFT_PATH)/libft.a
+
+FT_FPRINTF_PATH	= includes/ft_fprintf
+FT_FPRINTF		= $(FT_FPRINTF_PATH)/ft_fprintf.a
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT) $(FT_FPRINTF)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(FT_FPRINTF) $(LDFLAGS) -o $(NAME)
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_PATH)
+
+$(FT_FPRINTF):
+	@$(MAKE) -C $(FT_FPRINTF_PATH)
 
 %.o: %.c includes/minishell.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) $(BONUS_OBJS)
 	@$(MAKE) -C $(LIBFT_PATH) clean
+	@$(MAKE) -C $(FT_FPRINTF_PATH) clean
 
 fclean: clean
 	@rm -f $(NAME)
-	@$(MAKE) -C $(LIBFT_PATH) fclean
+	@$(MAKE) -C  $(LIBFT_PATH) fclean
+	@$(MAKE) -C $(FT_FPRINTF_PATH) fclean
 
 re: fclean all
 
