@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+int	ft_is_command(char *input, char *cmd)
+{
+	if (!input || !cmd)
+		return (0);
+	while (*input && ft_is_whitespace(*input))
+		input++;
+	while (*cmd && *input && *input == *cmd)
+	{
+		input++;
+		cmd++;
+	}
+	// if cmd not fully matched -> not the same command
+	if (*cmd != '\0')
+		return (0);
+	// skip all whitespace after command and ensure nothing else follows
+	while (*input && ft_is_whitespace(*input))
+		input++;
+	if (*input == '\0')
+		return (1);
+	return (0);
+}
+
 int	is_whitespace(char *s)
 {
 	int	i;
@@ -26,6 +48,21 @@ int	is_whitespace(char *s)
 		i++;
 	}
 	return (1);
+}
+
+static void	print_env(t_envp *env)
+{
+	while (env != NULL)
+	{
+		if (env->key)
+		{
+			if (env->value)
+				ft_fprintf(1, "%s=%s\n", env->key, env->value);
+			else
+				ft_fprintf(1, "%s=\n", env->key);
+		}
+		env = env->next;
+	}
 }
 
 int	readline_check(t_envp *env)
@@ -48,14 +85,8 @@ int	readline_check(t_envp *env)
 			add_history(input);
 		else
 			continue;
-		if(ft_strncmp_custom("env", input, 3) == 0)
-		{
-			while(env->next != NULL)
-			{
-				ft_fprintf(1 ,"%s%s\n", env->key, env->value);
-				env = env->next;
-			}
-		}
+		if (ft_is_command(input, "env"))
+			print_env(env);
 		free(input);
 	}
 	return (1);

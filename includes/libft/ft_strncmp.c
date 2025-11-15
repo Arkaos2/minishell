@@ -31,6 +31,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 int	ft_strncmp_custom(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
+	size_t	j;
 
 	while (*s2 && ft_is_whitespace(*s2))
 		s2++;
@@ -45,6 +46,3 @@ int	ft_strncmp_custom(const char *s1, const char *s2, size_t n)
 		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 	return (0);
 }
-
-
-

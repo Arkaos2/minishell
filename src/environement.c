@@ -38,7 +38,7 @@ t_envp *check_node(char *envp)
 		node->key = key_finder(envp);
 		if (!node->key)
 			return(free(node), NULL);
-		node->value = ft_strdup(ft_strchr(envp, '=') + 1);
+		node->value = ft_strdup(ft_strchr(envp, '=') );
 		node->next = NULL;
 	return (node);
 }
