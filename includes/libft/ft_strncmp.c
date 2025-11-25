@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 16:16:55 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 18:11:10 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:26:16 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,31 @@ int	ft_strncmp_custom(const char *s1, const char *s2, size_t n)
 	if (i < n)
 		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 	return (0);
+}
+
+int	ft_strcmp_trim(const char *s1, const char *s2)
+{
+	size_t		i1;
+	size_t		i2;
+
+	i1 = 0;
+	i2 = 0;
+	while (s1[i1] && ft_is_whitespace(s1[i1]))
+		i1++;
+	while (s2[i2] && ft_is_whitespace(s2[i2]))
+		i2++;
+	while (s1[i1] && s2[i2] && s1[i1] == s2[i2])
+	{
+		i1++;
+		i2++;
+	}
+	if (s1[i1] != '\0')
+		return ((unsigned char)s1[i1] - (unsigned char)s2[i2]);
+	while (s2[i2] && ft_is_whitespace(s2[i2]))
+		i2++;
+	if (s2[i2] == '\0')
+		return (0);
+	return ((unsigned char)s1[i1] - (unsigned char)s2[i2]);
 }
 
 

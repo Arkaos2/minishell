@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:23:51 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 17:43:09 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:23:04 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	readline_check(t_envp *env)
 			add_history(input);
 		else
 			continue;
-		if(ft_strncmp_custom("env", input, 3) == 0)
+		if(ft_strcmp_trim("env", input) == 0)
 		{
 			while(env->next != NULL)
 			{
