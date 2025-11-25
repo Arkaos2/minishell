@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/17 16:16:45 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:01:03 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void			print_pointer(va_list param, int *count);
 int				ft_is_whitespace(char s);
 int				ft_strncmp_custom(const char *s1, const char *s2, size_t n);
 int				ft_strcmp_trim(const char *s1, const char *s2);
-
+int				is_whitespace(char *s);
 
 void			*ft_memchr(const void *arr, int c, size_t n);
 void			*ft_calloc(size_t elementCount, size_t elementSize);
