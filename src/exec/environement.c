@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environement.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 17:35:31 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:08:50 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,18 @@ char	*key_finder(char *envp)
 	return (key);
 }
 
-t_envp *check_node(char *envp)
+t_envp	*check_node(char *envp)
 {
-	t_envp *node;
+	t_envp	*node;
 
 	node = malloc(sizeof(t_envp));
-		if (!node)
-			return (NULL);
-		node->key = key_finder(envp);
-		if (!node->key)
-			return(free(node), NULL);
-		node->value = ft_strdup(ft_strchr(envp, '=') );
-		node->next = NULL;
+	if (!node)
+		return (NULL);
+	node->key = key_finder(envp);
+	if (!node->key)
+		return (free(node), NULL);
+	node->value = ft_strdup(ft_strchr(envp, '='));
+	node->next = NULL;
 	return (node);
 }
 
@@ -71,4 +71,3 @@ t_envp	*create_envp(char **envp)
 	}
 	return (head);
 }
-

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
+#    By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/11/14 17:12:55 by saibelab         ###   ########.fr        #
+#    Updated: 2025/11/27 19:44:41 by pmalumba         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,11 @@ CC				= cc
 CFLAGS			= -Wall -Wextra -Werror -g3 -Ilibft/includes -Iincludes
 LDFLAGS			= -lreadline
 
-SRCS			= src/main.c src/history.c src/environement.c
+SRCS			= src/exec/environement.c \
+src/exec/history.c \
+src/exec/main.c \
+src/parse/init.c \
+src/parse/outils.c \
 
 OBJS			= $(SRCS:.c=.o)
 
