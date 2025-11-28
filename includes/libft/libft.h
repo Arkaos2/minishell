@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 19:01:03 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:04:48 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
+# 
+
+typedef struct s_gc t_gc;
 
 typedef struct s_list
 {
@@ -67,6 +70,7 @@ char			*append(char *stock, char *buf);
 char			*create_new_stock(char *stock, char *new_stock, char *buf);
 char			*ft_strncpy(char *dest, char *src, unsigned int n);
 char			*ft_strndup(const char *s, int n);
+char			*gc_strndup(t_gc *gc, const char *s, int n);
 
 char			**ft_split(char const *s, char c);
 

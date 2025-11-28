@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 18:53:16 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 18:53:37 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:58:02 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_gcnode	*new_node(void *ptr)
 {
 	t_gcnode	*n;
 
-	n = malloc(sizeof(*n));
+	n = ft_calloc(1, sizeof(*n));
 	if (!n)
 		return (NULL);
 	n->ptr = ptr;
@@ -28,19 +28,19 @@ t_gc	*gc_new(void)
 {
 	t_gc	*gc;
 
-	gc = malloc(sizeof(*gc));
+	gc = ft_calloc(1, sizeof(*gc));
 	if (!gc)
 		return (NULL);
 	gc->head = NULL;
 	return (gc);
 }
 
-void	*gc_malloc(t_gc *gc, size_t size)
+void	*gc_calloc(t_gc *gc, size_t size)
 {
 	void		*p;
 	t_gcnode	*n;
 
-	p = malloc(size);
+	p = ft_calloc(1, size);
 	if (!p)
 		return (NULL);
 	n = new_node(p);
@@ -79,11 +79,34 @@ char	*gc_strdup(t_gc *gc, const char *s)
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
-	dup = gc_malloc(gc, len + 1);
+	dup = gc_calloc(gc, sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);
 	i = 0;
 	while (i < len)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
+char	*gc_strndup(t_gc *gc, const char *s, int n)
+{
+	char	*dup;
+	size_t	size;
+	size_t	i;
+
+	i = 0;
+	if (n > (int)ft_strlen(s))
+		size = ft_strlen(s) + 1;
+	else
+		size = n + 1;
+	dup = (char *)gc_calloc(gc, sizeof(char) * (size));
+	if (dup == NULL)
+		return (NULL);
+	while (i < size - 1)
 	{
 		dup[i] = s[i];
 		i++;

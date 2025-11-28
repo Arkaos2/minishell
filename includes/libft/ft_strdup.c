@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:53:35 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/13 20:00:28 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:08:36 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *src)
 	char	*dest;
 
 	i = 0;
-	dest = malloc(sizeof(char) * ft_strlen(src) + 1);
+	dest = ft_calloc(sizeof(char), ft_strlen(src) + 1);
 	if (dest == NULL)
 		return (0);
 	while (src[i] != '\0')
@@ -41,7 +41,7 @@ char	*ft_strndup(const char *s, int n)
 		size = ft_strlen(s) + 1;
 	else
 		size = n + 1;
-	dup = (char *)malloc(sizeof(char) * (size));
+	dup = (char *)ft_calloc(sizeof(char), size);
 	if (dup == NULL)
 		return (NULL);
 	while (i < size - 1)

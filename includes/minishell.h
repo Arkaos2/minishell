@@ -21,12 +21,6 @@ typedef struct s_gc
 	t_gcnode		*head;
 }	t_gc;
 
-typedef struct s_lexer {
-	char	*input;
-	int		i;
-	int		length;
-} t_lexer;
-
 typedef struct s_envp
 {
 	char			*key;
@@ -34,11 +28,18 @@ typedef struct s_envp
 	struct s_envp	*next;
 }					t_envp;
 
-char *key_finder(char *envp);
-t_envp *create_envp(char **envp);
-t_envp *check_node(char *envp);
+t_gc		*gc_new(void);
+void		*gc_calloc(t_gc *gc, size_t size);
+void		gc_destroy(t_gc *gc);
+char		*gc_strdup(t_gc *gc, const char *s);
+t_gcnode	*new_node(void *ptr);
+char		*gc_strndup(t_gc *gc, const char *s, int n);
 
-int	is_whitespace(char *s);
-int	readline_check(t_envp *env);
+char		*key_finder(t_gc *gc, char *envp);
+t_envp		*create_envp(t_gc *gc, char **envp);
+t_envp		*check_node(t_gc *gc, char *envp);
+
+int			is_whitespace(char *s);
+int			readline_check(t_envp *env);
 
 #endif

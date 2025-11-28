@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:23:18 by saibelab          #+#    #+#             */
-/*   Updated: 2025/09/23 15:22:22 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:59:46 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	len = ft_strlen(s1) + ft_strlen(s2) + 1;
 	i = 0;
 	j = 0;
-	s3 = malloc(sizeof(char) * len);
+	s3 = ft_calloc(len, sizeof(char));
 	if (!s3)
 		return (NULL);
 	while (s1[i] != '\0')

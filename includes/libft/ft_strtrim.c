@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:52:58 by saibelab          #+#    #+#             */
-/*   Updated: 2025/09/23 15:25:12 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:00:03 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	j = ft_strlen(s1);
 	while (j > i && in_set(s1[j - 1], set))
 		j--;
-	str = malloc(sizeof(char) * (j - i + 1));
+	str = ft_calloc((j - i + 1), sizeof(char));
 	if (!str)
 		return (NULL);
 	k = 0;

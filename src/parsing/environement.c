@@ -6,13 +6,13 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 15:25:21 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 17:00:25 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*key_finder(char *envp)
+char	*key_finder(t_gc *gc, char *envp)
 {
 	int		i;
 	char	*key;
@@ -20,7 +20,7 @@ char	*key_finder(char *envp)
 	i = 0;
 	while (envp[i] != '=')
 		i++;
-	key = ft_strndup(envp, i);
+	key = gc_strndup(gc, envp, i);
 	i = -1;
 	while (key[++i])
 		if (!ft_isalnum(key[i]) && key[i] != '_')
@@ -28,14 +28,14 @@ char	*key_finder(char *envp)
 	return (key);
 }
 
-t_envp *check_node(char *envp)
+t_envp *check_node(t_gc *gc, char *envp)
 {
 	t_envp *node;
 
-	node = malloc(sizeof(t_envp));
+	node = gc_calloc(gc, sizeof(t_envp));
 		if (!node)
 			return (NULL);
-		node->key = key_finder(envp);
+		node->key = key_finder(gc, envp);
 		if (!node->key)
 			return(free(node), NULL);
 		node->value = ft_strdup(ft_strchr(envp, '='));
@@ -43,7 +43,7 @@ t_envp *check_node(char *envp)
 	return (node);
 }
 
-t_envp	*create_envp(char **envp)
+t_envp	*create_envp(t_gc *gc, char **envp)
 {
 	t_envp	*head;
 	t_envp	*tail;
@@ -57,7 +57,7 @@ t_envp	*create_envp(char **envp)
 	{
 		if (ft_isalpha(envp[i][0]))
 		{
-			node = check_node(envp[i]);
+			node = check_node(gc, envp[i]);
 			if (node)
 			{
 				if (!head)

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 14:39:38 by saibelab          #+#    #+#             */
-/*   Updated: 2025/09/17 15:19:13 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:02:11 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*extract_line(char *stock)
 		i++;
 	if (stock[i] == '\n')
 		i++;
-	new = malloc(sizeof(char) * (i + 1));
+	new = ft_calloc((i + 1), sizeof(char));
 	if (!new)
 		return (NULL);
 	ft_strncpy(new, stock, i);
@@ -65,7 +65,7 @@ char	*remove_line(char *stock)
 		j++;
 	if (j == 0)
 		return (free(stock), NULL);
-	new_stock = malloc(sizeof(char) * (j + 1));
+	new_stock = ft_calloc((j + 1), sizeof(char));
 	if (!new_stock)
 		return (free(stock), NULL);
 	ft_strncpy(new_stock, stock + i, j);
@@ -78,7 +78,7 @@ char	*read_to_stock(int fd, char *stock)
 	char	*buf;
 	ssize_t	bytes;
 
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buf)
 		return (NULL);
 	while (find_newline(stock) == -1)
@@ -113,7 +113,7 @@ char	*get_next_line(int fd)
 		gnl_clear(stock);
 	if (!stock[fd])
 	{
-		stock[fd] = malloc(1);
+		stock[fd] = ft_calloc(1, sizeof(char));
 		if (!stock[fd])
 			return (NULL);
 		stock[fd][0] = '\0';

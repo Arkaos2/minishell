@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:23:55 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 19:00:15 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:14:37 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,11 @@ int	readline_check(t_envp *env)
 int main(int argc, char **argv, char **envp)
 {
 	(void)argv;
-	(void)envp;
-	t_envp *env = create_envp(envp);
+	t_gc *gc;
+	t_envp *env;
+
+	gc = gc_new();
+	env = create_envp(gc, envp);
 	if(argc != 1)
 		return 0;
 	readline_check(env);
