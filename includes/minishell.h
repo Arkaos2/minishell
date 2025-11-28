@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
+/*   Updated: 2025/11/28 17:12:11 by saibelab         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "libft/libft.h"
 # include "ft_fprintf/ft_fprintf.h"
-
 
 typedef struct s_gcnode
 {

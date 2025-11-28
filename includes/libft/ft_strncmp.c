@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 16:16:55 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/17 16:26:16 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 17:12:28 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,4 @@ int	ft_strcmp_trim(const char *s1, const char *s2)
 		return (0);
 	return ((unsigned char)s1[i1] - (unsigned char)s2[i2]);
 }
-
-
 

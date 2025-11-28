@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:00:25 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 17:37:10 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_envp *check_node(t_gc *gc, char *envp)
 		node->key = key_finder(gc, envp);
 		if (!node->key)
 			return(free(node), NULL);
-		node->value = ft_strdup(ft_strchr(envp, '='));
+		node->value = ft_strdup(ft_strchr(envp, '=') + 1);
 		node->next = NULL;
 	return (node);
 }

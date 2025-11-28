@@ -6,11 +6,13 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:23:55 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 19:14:37 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 17:38:23 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
 
 int	readline_check(t_envp *env)
 {
@@ -32,6 +34,14 @@ int	readline_check(t_envp *env)
 			add_history(input);
 		else
 			continue;
+		if (ft_strcmp_trim(input, "env") == 0)
+		{
+			while (env)
+			{
+				printf("%s=%s\n", env->key, env->value);
+				env = env->next;
+			}
+		}
 		free(input);
 	}
 	return (1);
