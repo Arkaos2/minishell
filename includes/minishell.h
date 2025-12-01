@@ -28,6 +28,25 @@ typedef struct s_cmd
 	struct s_cmd *next; // prochaine commande (|)
 }					t_cmd;
 
+typedef enum e_token_type
+{
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_REDIR_APPEND,
+	TOKEN_HEREDOC
+}					t_token_type;
+
+typedef struct s_token
+{
+	char			*value;
+	t_token_type	type;
+	struct s_token	*next;
+}					t_token;
+
+void				free_array(char **av);
+
 char				*key_finder(char *envp);
 
 t_envp				*create_envp(char **envp);
@@ -35,7 +54,10 @@ t_envp				*check_node(char *envp);
 
 int					is_whitespace(char *s);
 int					readline_check(t_envp *env);
+int					redir_inxheredoc(t_token **tok, char *str, int *i);
 
 t_cmd				*init_cmd(void);
+
+t_token				*lstnew_token(char *value, t_token_type type);
 
 #endif
