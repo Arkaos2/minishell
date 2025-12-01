@@ -5,54 +5,47 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 16:55:25 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:27:29 by saibelab         ###   ########.fr       */
+/*   Created: 2025/11/28 18:17:54 by saibelab          #+#    #+#             */
+/*   Updated: 2025/11/28 18:19:28 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**get_path(char **envp)
+static char	**get_path_list(t_envp *env)
 {
-	int		i;
-	char	*path_value;
-	char	**paths;
-
-	if (!envp)
-		return (NULL);
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-	if (!envp[i])
-		return (NULL);
-	path_value = envp[i] + 5;
-	if (!path_value || path_value[0] == '\0')
-		return (NULL);
-	paths = ft_split(path_value, ':');
-	if (!paths)
-		return (NULL);
-	return (paths);
+	while (env)
+	{
+		if (ft_strcmp(env->key, "PATH") == 0)
+		{
+			if (!env->value || env->value[0] == '\0')
+				return (NULL);
+			return (ft_split(env->value, ':'));
+		}
+		env = env->next;
+	}
+	return (NULL);
 }
 
-char	*try_paths_for_cmd(char **paths, char **cmd)
+static char	*try_paths_for_cmd(char **paths, char *cmd)
 {
 	char	*tmp;
-	char	*correct;
+	char	*full;
 	int		i;
 
 	i = 0;
-	while (paths[i])
+	while (paths && paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		if (!tmp)
-			break ;
-		correct = ft_strjoin(tmp, cmd[0]);
+			return (NULL);
+		full = ft_strjoin(tmp, cmd);
 		free(tmp);
-		if (!correct)
-			break ;
-		if (access(correct, X_OK) == 0)
-			return (correct);
-		free(correct);
+		if (!full)
+			return (NULL);
+		if (access(full, X_OK) == 0)
+			return (full);
+		free(full);
 		i++;
 	}
 	return (NULL);
@@ -60,6 +53,8 @@ char	*try_paths_for_cmd(char **paths, char **cmd)
 
 int	is_absolute_path(char *cmd)
 {
+	if (!cmd)
+		return (0);
 	if (cmd[0] == '/')
 		return (1);
 	if (cmd[0] == '.' && cmd[1] == '/')
@@ -67,39 +62,26 @@ int	is_absolute_path(char *cmd)
 	return (0);
 }
 
-char	*check_absolute_path(char **cmd, char *infile)
+static char	*check_absolute_cmd(char *cmd)
 {
-	char	*result;
-
-	if (access(cmd[0], X_OK) == 0)
-		result = ft_strdup(cmd[0]);
-	else
-	{
-		if (access(infile, R_OK) == 0)
-		{
-			ft_putstr_fd(cmd[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-		}
-		result = NULL;
-	}
-	return (result);
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
+	return (NULL);
 }
 
-char	*search_in_path(char **cmd, char **envp, char *infile)
+char	*get_cmd_path(char *cmd, t_envp *env)
 {
 	char	**paths;
 	char	*result;
 
-	paths = get_path(envp);
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
+	if (is_absolute_path(cmd))
+		return (check_absolute_cmd(cmd));
+	paths = get_path_list(env);
 	if (!paths)
 		return (NULL);
 	result = try_paths_for_cmd(paths, cmd);
-	if (!result && access(infile, R_OK) == 0)
-	{
-		ft_putstr_fd("pipex : ", 2);
-		ft_putstr_fd(cmd[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-	}
 	free_split(paths);
 	return (result);
 }

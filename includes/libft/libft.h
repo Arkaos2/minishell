@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 15:04:48 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:16:34 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
-# 
+#
 
 typedef struct s_gc t_gc;
 
@@ -52,6 +52,7 @@ int				ft_tolower(int c);
 int				ft_memcmp(const void *s1, const void *s2, size_t n);
 int				ft_lstsize(t_list *lst);
 int				find_newline(char *str);
+int				ft_strcmp(char *s1, char *s2);
 
 char			*ft_strnstr(const char *str, const char *to_find, size_t n);
 char			*ft_strdup(const char *s);

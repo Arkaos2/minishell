@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/11/28 17:01:58 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/01 16:44:46 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,15 @@ CC				= cc
 CFLAGS			= -Wall -Wextra -Werror -g3 -Ilibft/includes -Iincludes
 LDFLAGS			= -lreadline
 
-SRCS			= src/main.c src/parsing/environement.c src/gc.c
+SRCS			= src/main.c \
+			src/gc.c \
+			src/parsing/environement.c \
+			src/parsing/lexer.c \
+			src/exec/check_path.c \
+			src/exec/env.c \
+			src/exec/exec.c \
+			src/exec/pipes.c \
+			src/exec/free.c
 
 OBJS			= $(SRCS:.c=.o)
 
