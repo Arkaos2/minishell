@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:17:54 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 18:19:28 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:33:54 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,23 @@ static char	**get_path_list(t_envp *env)
 	return (NULL);
 }
 
-static char	*try_paths_for_cmd(char **paths, char *cmd)
+static char	*try_paths_for_cmd(char **paths, char *cmd, t_gc *gc)
 {
-	char	*tmp;
 	char	*full;
+	char	*tmp;
 	int		i;
 
 	i = 0;
 	while (paths && paths[i])
 	{
-		tmp = ft_strjoin(paths[i], "/");
+		tmp = gc_strjoin(gc, paths[i], "/");
 		if (!tmp)
 			return (NULL);
-		full = ft_strjoin(tmp, cmd);
-		free(tmp);
+		full = gc_strjoin(gc, tmp, cmd);
 		if (!full)
 			return (NULL);
 		if (access(full, X_OK) == 0)
 			return (full);
-		free(full);
 		i++;
 	}
 	return (NULL);
@@ -69,7 +67,7 @@ static char	*check_absolute_cmd(char *cmd)
 	return (NULL);
 }
 
-char	*get_cmd_path(char *cmd, t_envp *env)
+char	*get_cmd_path(char *cmd, t_envp *env, t_gc *gc)
 {
 	char	**paths;
 	char	*result;
@@ -81,7 +79,7 @@ char	*get_cmd_path(char *cmd, t_envp *env)
 	paths = get_path_list(env);
 	if (!paths)
 		return (NULL);
-	result = try_paths_for_cmd(paths, cmd);
+	result = try_paths_for_cmd(paths, cmd, gc);
 	free_split(paths);
 	return (result);
 }

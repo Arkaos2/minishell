@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/01 16:44:46 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/02 16:12:00 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRCS			= src/main.c \
 			src/exec/env.c \
 			src/exec/exec.c \
 			src/exec/pipes.c \
-			src/exec/free.c
+			src/exec/free.c \
+			src/exec/redirection.c
 
 OBJS			= $(SRCS:.c=.o)
 

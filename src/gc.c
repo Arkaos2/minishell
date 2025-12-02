@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 18:53:16 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 16:58:02 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/02 17:25:03 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,4 +113,30 @@ char	*gc_strndup(t_gc *gc, const char *s, int n)
 	}
 	dup[i] = '\0';
 	return (dup);
+}
+
+char	*gc_strjoin(t_gc *gc, const char *s1, const char *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*out;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (s1)
+		len1 = ft_strlen(s1);
+	else
+		len1 = 0;
+	if (s2)
+		len2 = ft_strlen(s2);
+	else
+		len2 = 0;
+	out = gc_calloc(gc, sizeof(char) * (len1 + len2 + 1));
+	if (!out)
+		return (NULL);
+	if (s1)
+		ft_strlcpy(out, s1, len1 + 1);
+	if (s2)
+		ft_strlcat(out, s2, len1 + len2 + 1);
+	return (out);
 }

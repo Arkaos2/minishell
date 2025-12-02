@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:51:17 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/01 15:56:39 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/02 17:24:38 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,14 @@ static int	count_env(t_envp *env)
 	return (i);
 }
 
-static char	**fill_envp(t_envp *env, int size)
+static char	**fill_envp(t_gc *gc, t_envp *env, int size)
 {
 	char	**envp;
 	int		i;
 	t_envp	*tmp;
-	char	*tmp1;
 
 	i = 0;
-	envp = ft_calloc(size + 1, sizeof(char *));
+	envp = gc_calloc(gc, (size + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
 	tmp = env;
@@ -41,21 +40,27 @@ static char	**fill_envp(t_envp *env, int size)
 	{
 		if (tmp->value)
 		{
-			tmp1 = ft_strjoin(tmp->key, "=");
-			envp[i] = ft_strjoin(tmp1, tmp->value);
-			free(tmp1);
+			envp[i] = gc_strjoin(gc, tmp->key, "=");
+			if (!envp[i])
+				return (NULL);
+			envp[i] = gc_strjoin(gc, envp[i], tmp->value);
+			if (!envp[i])
+				return (NULL);
 		}
 		else
-			envp[i] = ft_strdup(tmp->key);
-		if (!envp[i])
-			return (NULL);
+		{
+			envp[i] = gc_strdup(gc, tmp->key);
+			if (!envp[i])
+				return (NULL);
+		}
 		i++;
 		tmp = tmp->next;
 	}
-	return (envp[i] = NULL, envp);
+	envp[i] = NULL;
+	return (envp);
 }
 
-char	**env_to_char(t_envp *env)
+char	**env_to_char(t_gc *gc, t_envp *env)
 {
 	int		size;
 	char	**envp;
@@ -63,6 +68,6 @@ char	**env_to_char(t_envp *env)
 	if (!env)
 		return (NULL);
 	size = count_env(env);
-	envp = fill_envp(env, size);
+	envp = fill_envp(gc, env, size);
 	return (envp);
 }

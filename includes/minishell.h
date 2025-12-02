@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/01 18:40:07 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:22:48 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@
 # include "libft/libft.h"
 # include "ft_fprintf/ft_fprintf.h"
 # include "sys/wait.h"
-
-typedef struct s_cmd
-{
-	char **args;        // ["ls", "-l", NULL]
-	char *infile;       // pour <
-	char *outfile;      // pour > ou >>
-	int append;         // 0 ou 1 (>>)
-	int heredoc;        // 0 ou 1 (<<)
-	char *limiter;      // délimiteur du heredoc
-	struct s_cmd *next; // prochaine commande (|)
-}					t_cmd;
 
 typedef enum e_token_type
 {
@@ -50,6 +39,29 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
+typedef enum e_redir_type
+{
+	R_IN,
+	R_OUT,
+	R_APPEND,
+	R_HEREDOC
+}	t_redir_type;
+
+typedef struct s_redir
+{
+	t_redir_type		type;
+	char				*file;
+	struct s_redir		*next;
+}	t_redir;
+
+typedef struct s_cmd
+{
+	char			**args;
+	t_redir			*redirs;
+	pid_t			pid;
+	struct s_cmd	*next;
+}					t_cmd;
+
 typedef struct s_envp
 {
 	char			*key;
@@ -66,7 +78,6 @@ typedef struct s_exec
 	int		last_exit;
 	t_gc	*gc;
 }	t_exec;
-
 
 typedef struct s_gcnode
 {
@@ -90,6 +101,7 @@ void		gc_destroy(t_gc *gc);
 char		*gc_strdup(t_gc *gc, const char *s);
 t_gcnode	*new_node(void *ptr);
 char		*gc_strndup(t_gc *gc, const char *s, int n);
+char		*gc_strjoin(t_gc *gc, const char *s1, const char *s2);
 
 char		*key_finder(t_gc *gc, char *envp);
 t_envp		*create_envp(t_gc *gc, char **envp);
@@ -98,13 +110,17 @@ t_envp		*check_node(t_gc *gc, char *envp);
 int			is_whitespace(char *s);
 int			readline_check(t_envp *env);
 
-char		*get_cmd_path(char *cmd, t_envp *env);
+char		*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int			is_absolute_path(char *cmd);
 
 void		run_pipes(t_exec *exec);
 void		exec_child(t_cmd *cmd, t_exec *exec);
 void		setup_child_fds(t_cmd *cmd, t_exec *exec, int i);
-char		**env_to_char(t_envp *env);
+int			check_redirs(t_cmd *cmd);
+void	cleanup_on_error(t_exec *exec);
+void	safe_exit(t_exec *exec, int code);
+
+char		**env_to_char(t_gc *gc, t_envp *env);
 
 int			**create_pipes(int n, t_gc *gc);
 int			count_cmds(t_cmd *cmd);

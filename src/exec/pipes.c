@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/01 17:19:32 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:23:54 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,6 @@ int	count_cmds(t_cmd *cmd)
 	return (count);
 }
 
-void	close_all_pipes(int **pipes, int nb_cmd)
-{
-	int i;
-
-	if (!pipes)
-		return ;
-	i = 0;
-	while (i < nb_cmd - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
-	}
-}
-
 static void	cleanup_allocated_pipes(int **pipes, int count)
 {
 	int j;
@@ -49,10 +34,8 @@ static void	cleanup_allocated_pipes(int **pipes, int count)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
-		free(pipes[j]);
 		j++;
 	}
-	free(pipes);
 }
 
 int **create_pipes(int nb_cmd, t_gc *gc)
@@ -77,7 +60,6 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 		if (pipe(pipes[i]) == -1)
 		{
 			perror("pipe");
-			/* close fds for previously created pipes and current */
 			cleanup_allocated_pipes(pipes, i + 1);
 			return (NULL);
 		}
@@ -86,20 +68,5 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 	return (pipes);
 }
 
-void	free_pipes(int **pipes, int nb_cmd)
-{
-	int i;
 
-	if (!pipes)
-		return ;
-	i = 0;
-	while (i < nb_cmd - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		free(pipes[i]);
-		i++;
-	}
-	free(pipes);
-}
 
