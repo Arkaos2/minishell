@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/02 18:23:54 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:19:15 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ static void	cleanup_allocated_pipes(int **pipes, int count)
 	j = 0;
 	while (j < count)
 	{
-		close(pipes[j][0]);
-		close(pipes[j][1]);
+		if (pipes[j][0] >= 0)
+			close(pipes[j][0]);
+		if (pipes[j][1] >= 0)
+			close(pipes[j][1]);
 		j++;
 	}
 }
@@ -45,11 +47,11 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 
 	if (nb_cmd <= 1)
 		return (NULL);
-	pipes = gc_calloc(gc, sizeof(int *) * (nb_cmd - 1));
+	pipes = gc_calloc(gc, sizeof(int *) * 2);
 	if (!pipes)
 		return (NULL);
 	i = 0;
-	while (i < nb_cmd - 1)
+	while (i < 2)
 	{
 		pipes[i] = gc_calloc(gc, sizeof(int) * 2);
 		if (!pipes[i])
@@ -57,16 +59,39 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 			cleanup_allocated_pipes(pipes, i);
 			return (NULL);
 		}
-		if (pipe(pipes[i]) == -1)
-		{
-			perror("pipe");
-			cleanup_allocated_pipes(pipes, i + 1);
-			return (NULL);
-		}
+		pipes[i][0] = -1;
+		pipes[i][1] = -1;
 		i++;
 	}
 	return (pipes);
 }
 
+void	run_pipes(t_exec *exec)
+{
+	int		status;
+	t_cmd	*cmd;
+
+	exec->nb_cmd = count_cmds(exec->cmd_list);
+	exec->pipes = create_pipes(exec->nb_cmd, exec->gc);
+	if (!exec->pipes && exec->nb_cmd > 1)
+		cleanup_on_error(exec);
+	if (!exec->pipes && exec->nb_cmd > 1)
+	{
+		perror("pipe");
+		return ;
+	}
+	run_children(exec);
+	close_all_pipes(exec->pipes, exec->nb_cmd);
+	cmd = exec->cmd_list;
+	exec->last_exit = 0;
+	while (cmd)
+	{
+		if (waitpid(cmd->pid, &status, 0) > 0)
+			if (WIFEXITED(status))
+				exec->last_exit = WEXITSTATUS(status);
+		cmd = cmd->next;
+	}
+	exec->pipes = NULL;
+}
 
 

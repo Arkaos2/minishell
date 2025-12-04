@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/02 18:22:48 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:34:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,16 @@ int			readline_check(t_envp *env);
 char		*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int			is_absolute_path(char *cmd);
 
+void	run_children(t_exec *exec);
 void		run_pipes(t_exec *exec);
 void		exec_child(t_cmd *cmd, t_exec *exec);
 void		setup_child_fds(t_cmd *cmd, t_exec *exec, int i);
 int			check_redirs(t_cmd *cmd);
 void	cleanup_on_error(t_exec *exec);
 void	safe_exit(t_exec *exec, int code);
+
+/* debug helpers */
+void	print_redirs(t_redir *r);
 
 char		**env_to_char(t_gc *gc, t_envp *env);
 

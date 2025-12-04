@@ -6,11 +6,27 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:08:15 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/02 19:33:20 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:17:42 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_redirs(t_redir *r)
+{
+	while (r)
+	{
+		if (r->type == R_IN)
+			ft_fprintf(1, "[R_IN]  %s\n", r->file);
+		else if (r->type == R_OUT)
+			ft_fprintf(1, "[R_OUT] %s\n", r->file);
+		else if (r->type == R_APPEND)
+			ft_fprintf(1, "[R_AP]  %s\n", r->file);
+		else if (r->type == R_HEREDOC)
+			ft_fprintf(1, "[HERED] %s\n", r->file ? r->file : "(heredoc)");
+		r = r->next;
+	}
+}
 
 static void	open_input_redirections(t_redir *redir)
 {
@@ -70,9 +86,9 @@ static void	open_redirections(t_cmd *cmd)
 void	setup_child_fds(t_cmd *cmd, t_exec *exec, int i)
 {
 	if (i > 0)
-		dup2(exec->pipes[i - 1][0], STDIN_FILENO);
+		dup2(exec->pipes[(i - 1) % 2][0], STDIN_FILENO);
 	if (i < exec->nb_cmd - 1)
-		dup2(exec->pipes[i][1], STDOUT_FILENO);
+		dup2(exec->pipes[i % 2][1], STDOUT_FILENO);
 
 	open_redirections(cmd);
 	close_all_pipes(exec->pipes, exec->nb_cmd);

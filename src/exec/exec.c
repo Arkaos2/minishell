@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/02 18:23:05 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:34:05 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,40 @@ static void	launch_children(t_cmd *cmd, t_exec *exec, int i)
 	exec_child(cmd, exec);
 }
 
-static void	run_children(t_exec *exec)
+static pid_t	spawn_child(t_exec *exec, int i)
+{
+	pid_t pid;
+
+	if (i < exec->nb_cmd - 1)
+	{
+		if (pipe(exec->pipes[i % 2]) == -1)
+		{
+			perror("pipe");
+			cleanup_on_error(exec);
+			return (-1);
+		}
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		cleanup_on_error(exec);
+		return (-1);
+	}
+	return (pid);
+}
+
+static void	handle_parent(t_exec *exec, int i)
+{
+	if (i > 0)
+		if (exec->pipes[(i - 1) % 2][0] >= 0)
+			close(exec->pipes[(i - 1) % 2][0]);
+	if (i < exec->nb_cmd - 1)
+		if (exec->pipes[i % 2][1] >= 0)
+			close(exec->pipes[i % 2][1]);
+}
+
+void	run_children(t_exec *exec)
 {
 	t_cmd	*cmd;
 	int		i;
@@ -52,51 +85,15 @@ static void	run_children(t_exec *exec)
 	i = 0;
 	while (cmd)
 	{
-		pid = fork();
-		if (pid < 0)
-		{
-			perror("fork");
-			cleanup_on_error(exec);
-		}
+		pid = spawn_child(exec, i);
+		if (pid == -1)
+			return ;
 		cmd->pid = pid;
 		if (pid == 0)
 			launch_children(cmd, exec, i);
 		else
-		{
-			if (i > 0)
-				close(exec->pipes[i - 1][0]);
-			if (i < exec->nb_cmd - 1)
-				close(exec->pipes[i][1]);
-		}
+			handle_parent(exec, i);
 		cmd = cmd->next;
 		i++;
 	}
-}
-
-void	run_pipes(t_exec *exec)
-{
-	int		status;
-	t_cmd	*cmd;
-
-	exec->nb_cmd = count_cmds(exec->cmd_list);
-	exec->pipes = create_pipes(exec->nb_cmd, exec->gc);
-	if (!exec->pipes && exec->nb_cmd > 1)
-		cleanup_on_error(exec);
-	if (!exec->pipes && exec->nb_cmd > 1)
-	{
-		perror("pipe");
-		return ;
-	}
-	run_children(exec);
-	close_all_pipes(exec->pipes, exec->nb_cmd);
-	cmd = exec->cmd_list;
-	exec->last_exit = 0;
-	while (cmd)
-	{
-		if (waitpid(cmd->pid, &status, 0) > 0)
-			if (WIFEXITED(status))
-				exec->last_exit = WEXITSTATUS(status);
-		cmd = cmd->next;
-	}
-	exec->pipes = NULL;
 }

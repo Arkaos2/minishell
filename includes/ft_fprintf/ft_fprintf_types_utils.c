@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fprintf_types_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/12 14:23:10 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/26 16:39:45 by miltavar         ###   ########.fr       */
+/*   Created: 2025/12/04 16:23:52 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/04 16:23:55 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
