@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/04 16:19:15 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:09:20 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ void	run_pipes(t_exec *exec)
 		perror("pipe");
 		return ;
 	}
+	signal(SIGINT, heredoc_sigint_handler);
+	fill_all_heredocs(exec->gc, exec->cmd_list);
+	signal(SIGINT, SIG_DFL);
 	run_children(exec);
 	close_all_pipes(exec->pipes, exec->nb_cmd);
 	cmd = exec->cmd_list;

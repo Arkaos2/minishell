@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/04 16:34:17 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:09:30 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <signal.h>
+# include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -51,6 +53,7 @@ typedef struct s_redir
 {
 	t_redir_type		type;
 	char				*file;
+	char 				*heredoc_content;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -89,6 +92,10 @@ typedef struct s_gc
 {
 	t_gcnode		*head;
 }	t_gc;
+
+void	fill_all_heredocs(t_gc *gc, t_cmd *cmd_list);
+int	setup_heredoc_input(t_cmd *cmd);
+void	heredoc_sigint_handler(int sig);
 
 
 void	free_cmds(t_cmd *cmd);

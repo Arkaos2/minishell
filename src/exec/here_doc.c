@@ -1,0 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/09 18:52:18 by saibelab         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static char	*read_heredoc_content(t_gc *gc, char *delimiter)
+{
+	char	*line;
+	char	*content;
+
+	content = gc_strdup(gc, "");
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line)
+			break ;
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		content = gc_strjoin(gc, content, line);
+		content = gc_strjoin(gc, content, "\n");
+		free(line);
+	}
+	rl_clear_history();
+	return (content);
+}
+
+static void	fill_cmd_heredocs(t_gc *gc, t_cmd *cmd)
+{
+	t_redir	*r;
+
+	r = cmd->redirs;
+	while (r)
+	{
+		if (r->type == R_HEREDOC)
+			r->heredoc_content = read_heredoc_content(gc, r->file);
+		r = r->next;
+	}
+}
+
+void	fill_all_heredocs(t_gc *gc, t_cmd *cmd_list)
+{
+	t_cmd	*cmd;
+
+	cmd = cmd_list;
+	while (cmd)
+	{
+		fill_cmd_heredocs(gc, cmd);
+		cmd = cmd->next;
+	}
+}
+
+int	setup_heredoc_input(t_cmd *cmd)
+{
+	t_redir	*r;
+	int		pipefd[2];
+
+	r = cmd->redirs;
+	while (r)
+	{
+		if (r->type == R_HEREDOC)
+		{
+			if (pipe(pipefd) == -1)
+			{
+				perror("pipe");
+				return (-1);
+			}
+			write(pipefd[1], r->heredoc_content, ft_strlen(r->heredoc_content));
+			close(pipefd[1]);
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
+			break ;
+		}
+		r = r->next;
+	}
+	return (0);
+}
+
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_done = 1;
+}

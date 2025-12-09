@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 16:25:09 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/04 16:16:04 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/09 19:30:00 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/09 18:51:08 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,77 +14,47 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_gc    *gc;
-	t_exec  *exec;
-	t_cmd   *c1;
-	t_cmd   *c2;
-	t_cmd   *c3;
-	t_redir *r;
+	t_gc	*gc;
+	t_exec	*exec;
+	t_cmd	*c1;
+	t_redir	*r1;
+
 
 	(void)argc;
 	(void)argv;
 
+	/* Init GC et exec */
 	gc = gc_new();
 	if (!gc)
 		return (1);
-
 	exec = gc_calloc(gc, sizeof(*exec));
-	c1 = gc_calloc(gc, sizeof(*c1));
-	c2 = gc_calloc(gc, sizeof(*c2));
-	c3 = gc_calloc(gc, sizeof(*c3));
-	if (!exec || !c1 || !c2 || !c3)
-		return (1);
 
-	/* Commande 1 : cat < infile2 < infile3 */
+	/* Commande 1 : cat << EOF1 << EOF2 */
+	c1 = gc_calloc(gc, sizeof(*c1));
 	c1->args = gc_calloc(gc, 2 * sizeof(char *));
 	c1->args[0] = gc_strdup(gc, "cat");
 	c1->args[1] = NULL;
-	/* infile2 */
-	r = gc_calloc(gc, sizeof(*r));
-	r->type = R_IN;
-	r->file = gc_strdup(gc, "infile2");
-	r->next = NULL;
-	c1->redirs = r;
-	/* infile3 */
-	r = gc_calloc(gc, sizeof(*r));
-	r->type = R_IN;
-	r->file = gc_strdup(gc, "infile3");
-	r->next = c1->redirs;
-	c1->redirs = r;
 
-	/* Commande 2 : grep gc > out.txt */
-	c2->args = gc_calloc(gc, 3 * sizeof(char *));
-	c2->args[0] = gc_strdup(gc, "grep");
-	c2->args[1] = gc_strdup(gc, "gc");
-	c2->args[2] = NULL;
-	r = gc_calloc(gc, sizeof(*r));
-	r->type = R_OUT;
-	r->file = gc_strdup(gc, "out.txt");
-	r->next = NULL;
-	c2->redirs = r;
+	/* Heredoc EOF1 */
+	r1 = gc_calloc(gc, sizeof(*r1));
+	r1->type = R_HEREDOC;
+	r1->file = gc_strdup(gc, "EOF1");
+	r1->heredoc_content = NULL;
 
-	/* Commande 3 : wc -l >> final.txt  and  < infile */
-	c3->args = gc_calloc(gc, 3 * sizeof(char *));
-	c3->args[0] = gc_strdup(gc, "cat");
-	c3->args[1] = NULL;
-	/* append final.txt */
-	r = gc_calloc(gc, sizeof(*r));
-	r->type = R_APPEND;
-	r->file = gc_strdup(gc, "final.txt");
-	r->next = NULL;
-	c3->redirs = r;
-	/* input infile */
-	r = gc_calloc(gc, sizeof(*r));
-	r->type = R_IN;
-	r->file = gc_strdup(gc, "Makefile");
-	r->next = c3->redirs;
-	c3->redirs = r;
 
-	/* Chaînage */
-	c1->next = c2;
-	c2->next = c3;
-	c3->next = NULL;
+	/* Chaînage dans l'ordre Bash */
+	r1->next = NULL;  // EOF1 -> EOF2
+	c1->redirs = r1;
 
+	/* Chaînage commande unique */
+	c1->next = NULL;
+
+	/* Remplissage des heredocs */
+	signal(SIGINT, heredoc_sigint_handler);
+	fill_all_heredocs(gc, c1);
+	signal(SIGINT, SIG_DFL);
+
+	/* Setup exec structure */
 	exec->cmd_list = c1;
 	exec->env = create_envp(gc, envp);
 	exec->pipes = NULL;
@@ -92,29 +62,8 @@ int	main(int argc, char **argv, char **envp)
 	exec->last_exit = 0;
 	exec->gc = gc;
 
-	if (!check_redirs(exec->cmd_list))
-	{
-		gc_destroy(gc);
-		return (1);
-	}
-
-	/* debug: print commands and their redirections */
-	{
-		t_cmd *it = exec->cmd_list;
-		int idx = 0;
-		while (it)
-		{
-			if (it->args && it->args[0])
-				ft_fprintf(1, "[DEBUG] cmd %d: %s\n", idx, it->args[0]);
-			else
-				ft_fprintf(1, "[DEBUG] cmd %d: (no-args)\n", idx);
-			print_redirs(it->redirs);
-			it = it->next;
-			idx++;
-		}
-	}
-
-	run_pipes(exec);
+	/* Execution mock (juste un pipe simple pour test) */
+	run_children(exec);
 
 	gc_destroy(gc);
 	return (0);
