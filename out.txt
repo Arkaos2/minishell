@@ -1,2 +1,4 @@
-gc
-lo World
+x
+y gc
+z
+ddwe

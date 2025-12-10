@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:51:17 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/02 17:24:38 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/10 19:57:48 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,31 @@ static int	count_env(t_envp *env)
 	return (i);
 }
 
-static char	**fill_envp(t_gc *gc, t_envp *env, int size)
+static char	**fill_envp(t_shell *shell, int size)
 {
 	char	**envp;
 	int		i;
 	t_envp	*tmp;
 
 	i = 0;
-	envp = gc_calloc(gc, (size + 1) * sizeof(char *));
+	envp = gc_calloc(shell->gc, (size + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
-	tmp = env;
+	tmp = shell->exec->env;
 	while (tmp)
 	{
 		if (tmp->value)
 		{
-			envp[i] = gc_strjoin(gc, tmp->key, "=");
+			envp[i] = gc_strjoin(shell->gc, tmp->key, "=");
 			if (!envp[i])
 				return (NULL);
-			envp[i] = gc_strjoin(gc, envp[i], tmp->value);
+			envp[i] = gc_strjoin(shell->gc, envp[i], tmp->value);
 			if (!envp[i])
 				return (NULL);
 		}
 		else
 		{
-			envp[i] = gc_strdup(gc, tmp->key);
+			envp[i] = gc_strdup(shell->gc, tmp->key);
 			if (!envp[i])
 				return (NULL);
 		}
@@ -60,14 +60,14 @@ static char	**fill_envp(t_gc *gc, t_envp *env, int size)
 	return (envp);
 }
 
-char	**env_to_char(t_gc *gc, t_envp *env)
+char	**env_to_char(t_shell *shell)
 {
 	int		size;
 	char	**envp;
 
-	if (!env)
+	if (!shell->exec->env)
 		return (NULL);
-	size = count_env(env);
-	envp = fill_envp(gc, env, size);
+	size = count_env(shell->exec->env);
+	envp = fill_envp(shell, size);
 	return (envp);
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 19:30:00 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/09 18:51:08 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/10 19:57:50 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	main(int argc, char **argv, char **envp)
 	t_gc	*gc;
 	t_exec	*exec;
 	t_cmd	*c1;
+	t_shell *shell;
 	t_redir	*r1;
 
 
@@ -28,6 +29,11 @@ int	main(int argc, char **argv, char **envp)
 	if (!gc)
 		return (1);
 	exec = gc_calloc(gc, sizeof(*exec));
+	if (!exec)
+		return (1);
+	shell = gc_calloc(gc, sizeof(*shell));
+	if (!shell)
+		return (1);
 
 	/* Commande 1 : cat << EOF1 << EOF2 */
 	c1 = gc_calloc(gc, sizeof(*c1));
@@ -41,29 +47,28 @@ int	main(int argc, char **argv, char **envp)
 	r1->file = gc_strdup(gc, "EOF1");
 	r1->heredoc_content = NULL;
 
-
-	/* Chaînage dans l'ordre Bash */
-	r1->next = NULL;  // EOF1 -> EOF2
+	r1->next = NULL;
 	c1->redirs = r1;
 
-	/* Chaînage commande unique */
 	c1->next = NULL;
 
-	/* Remplissage des heredocs */
-	signal(SIGINT, heredoc_sigint_handler);
-	fill_all_heredocs(gc, c1);
-	signal(SIGINT, SIG_DFL);
+	/* wire shell early so we use shell->exec everywhere */
+	shell->exec = exec;
+	shell->tokx = NULL;
+	shell->cmd = c1;
+	shell->gc = gc;
 
-	/* Setup exec structure */
-	exec->cmd_list = c1;
-	exec->env = create_envp(gc, envp);
-	exec->pipes = NULL;
-	exec->nb_cmd = count_cmds(c1);
-	exec->last_exit = 0;
-	exec->gc = gc;
+	shell->exec->cmd_list = c1;
+	shell->exec->env = create_envp(gc, envp);
+	shell->exec->pipes = NULL;
+	shell->exec->nb_cmd = count_cmds(c1);
+	shell->exec->last_exit = 0;
 
-	/* Execution mock (juste un pipe simple pour test) */
-	run_children(exec);
+	shell->envp = shell->exec->env;
+
+	fill_all_heredocs(shell);
+
+	run_children(shell);
 
 	gc_destroy(gc);
 	return (0);

@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/09 18:10:19 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/10 17:55:16 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ LDFLAGS			= -lreadline
 SRCS			= src/main.c \
 			src/gc.c \
 			src/parsing/environement.c \
-			src/parsing/lexer.c \
 			src/exec/check_path.c \
 			src/exec/env.c \
 			src/exec/exec.c \

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/09 18:09:20 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/10 19:58:57 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,35 +66,33 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 	return (pipes);
 }
 
-void	run_pipes(t_exec *exec)
+void run_pipes(t_shell *shell)
 {
 	int		status;
 	t_cmd	*cmd;
 
-	exec->nb_cmd = count_cmds(exec->cmd_list);
-	exec->pipes = create_pipes(exec->nb_cmd, exec->gc);
-	if (!exec->pipes && exec->nb_cmd > 1)
-		cleanup_on_error(exec);
-	if (!exec->pipes && exec->nb_cmd > 1)
+	shell->exec->nb_cmd = count_cmds(shell->exec->cmd_list);
+	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc);
+	if (!shell->exec->pipes && shell->exec->nb_cmd > 1)
+		cleanup_on_error(shell);
+	if (!shell->exec->pipes && shell->exec->nb_cmd > 1)
 	{
 		perror("pipe");
 		return ;
 	}
-	signal(SIGINT, heredoc_sigint_handler);
-	fill_all_heredocs(exec->gc, exec->cmd_list);
-	signal(SIGINT, SIG_DFL);
-	run_children(exec);
-	close_all_pipes(exec->pipes, exec->nb_cmd);
-	cmd = exec->cmd_list;
-	exec->last_exit = 0;
+	fill_all_heredocs(shell);
+	run_children(shell);
+	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
+	cmd = shell->exec->cmd_list;
+	shell->exec->last_exit = 0;
 	while (cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) > 0)
 			if (WIFEXITED(status))
-				exec->last_exit = WEXITSTATUS(status);
+				shell->exec->last_exit = WEXITSTATUS(status);
 		cmd = cmd->next;
 	}
-	exec->pipes = NULL;
+	shell->exec->pipes = NULL;
 }
 
 

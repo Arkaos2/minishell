@@ -6,18 +6,17 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/09 18:52:18 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/10 19:57:48 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*read_heredoc_content(t_gc *gc, char *delimiter)
+static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 {
 	char	*line;
 	char	*content;
-
-	content = gc_strdup(gc, "");
+	content = gc_strdup(shell->gc, "");
 	while (1)
 	{
 		line = readline("heredoc> ");
@@ -28,15 +27,15 @@ static char	*read_heredoc_content(t_gc *gc, char *delimiter)
 			free(line);
 			break ;
 		}
-		content = gc_strjoin(gc, content, line);
-		content = gc_strjoin(gc, content, "\n");
+		content = gc_strjoin(shell->gc, content, line);
+		content = gc_strjoin(shell->gc, content, "\n");
 		free(line);
 	}
 	rl_clear_history();
 	return (content);
 }
 
-static void	fill_cmd_heredocs(t_gc *gc, t_cmd *cmd)
+static void	fill_cmd_heredocs(t_shell *shell, t_cmd *cmd)
 {
 	t_redir	*r;
 
@@ -44,25 +43,26 @@ static void	fill_cmd_heredocs(t_gc *gc, t_cmd *cmd)
 	while (r)
 	{
 		if (r->type == R_HEREDOC)
-			r->heredoc_content = read_heredoc_content(gc, r->file);
+			r->heredoc_content = read_heredoc_content(shell, r->file);
 		r = r->next;
 	}
 }
 
-void	fill_all_heredocs(t_gc *gc, t_cmd *cmd_list)
+void	fill_all_heredocs(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	cmd = cmd_list;
+	cmd = shell->exec->cmd_list;
 	while (cmd)
 	{
-		fill_cmd_heredocs(gc, cmd);
+		fill_cmd_heredocs(shell, cmd);
 		cmd = cmd->next;
 	}
 }
 
-int	setup_heredoc_input(t_cmd *cmd)
+int	setup_heredoc_input(t_shell *shell, t_cmd *cmd)
 {
+	(void)shell;
 	t_redir	*r;
 	int		pipefd[2];
 

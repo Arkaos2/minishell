@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/09 18:09:30 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/10 19:57:49 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ typedef struct s_exec
 	int		**pipes;
 	int		nb_cmd;
 	int		last_exit;
-	t_gc	*gc;
 }	t_exec;
 
 typedef struct s_gcnode
@@ -93,14 +92,24 @@ typedef struct s_gc
 	t_gcnode		*head;
 }	t_gc;
 
-void	fill_all_heredocs(t_gc *gc, t_cmd *cmd_list);
-int	setup_heredoc_input(t_cmd *cmd);
+typedef struct s_shell
+{
+	t_exec	*exec;
+	t_token	*tokx;
+	t_envp	*envp;
+	t_cmd	*cmd;
+	t_gc	*gc;
+}			t_shell;
+
+
+void	fill_all_heredocs(t_shell *shell);
+int	setup_heredoc_input(t_shell *shell, t_cmd *cmd);
 void	heredoc_sigint_handler(int sig);
 
 
-void	free_cmds(t_cmd *cmd);
-void	free_envp(t_envp *env);
-void	free_exec(t_exec *exec);
+void		free_cmds(t_cmd *cmd);
+void		free_envp(t_envp *env);
+void		free_exec(t_shell *shell);
 
 t_gc		*gc_new(void);
 void		*gc_calloc(t_gc *gc, size_t size);
@@ -120,18 +129,18 @@ int			readline_check(t_envp *env);
 char		*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int			is_absolute_path(char *cmd);
 
-void	run_children(t_exec *exec);
-void		run_pipes(t_exec *exec);
-void		exec_child(t_cmd *cmd, t_exec *exec);
-void		setup_child_fds(t_cmd *cmd, t_exec *exec, int i);
-int			check_redirs(t_cmd *cmd);
-void	cleanup_on_error(t_exec *exec);
-void	safe_exit(t_exec *exec, int code);
+void		run_children(t_shell *shell);
+void		run_pipes(t_shell *shell);
+void		exec_child(t_cmd *cmd, t_shell *shell);
+void		setup_child_fds(t_cmd *cmd, t_shell *shell, int i);
+int		check_redirs(t_cmd *cmd);
+void	cleanup_on_error(t_shell *shell);
+void	safe_exit(t_shell *shell, int code);
 
 /* debug helpers */
 void	print_redirs(t_redir *r);
 
-char		**env_to_char(t_gc *gc, t_envp *env);
+char		**env_to_char(t_shell *shell);
 
 int			**create_pipes(int n, t_gc *gc);
 int			count_cmds(t_cmd *cmd);
