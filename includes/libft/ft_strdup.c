@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:53:35 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/13 20:00:28 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:07:22 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *src)
 	char	*dest;
 
 	i = 0;
+	if (!src)
+		return (NULL);
 	dest = malloc(sizeof(char) * ft_strlen(src) + 1);
 	if (dest == NULL)
 		return (0);

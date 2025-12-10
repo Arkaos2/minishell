@@ -6,7 +6,7 @@
 #    By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/11/27 19:44:41 by pmalumba         ###   ########.fr        #
+#    Updated: 2025/12/08 20:16:20 by pmalumba         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,13 @@ LDFLAGS			= -lreadline
 SRCS			= src/exec/environement.c \
 src/exec/history.c \
 src/exec/main.c \
-src/parse/init.c \
+src/parse/redirs.c \
 src/parse/outils.c \
+gc.c \
+src/main2.c \
+src/parse/lexing.c \
+src/parse/list.c \
+
 
 OBJS			= $(SRCS:.c=.o)
 
