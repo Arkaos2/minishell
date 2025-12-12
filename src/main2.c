@@ -6,63 +6,157 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 19:30:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/08 21:05:24 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:43:44 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*init_struct(void)
+t_shell	*init_struct(void)
 {
-	t_cmd	*cmd;
+	t_shell	*shell;
+	t_gc	*gc;
 
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	if (!cmd)
+	gc = gc_new();
+	if (!gc)
 		return (NULL);
-	cmd->gc = gc_new();
-	if (!cmd->gc)
-		return (free(cmd), NULL);
-	cmd->args = gc_calloc(cmd->gc, sizeof(char *) * 100);
-	if (!cmd->args)
-		return (gc_destroy(cmd->gc), free(cmd), NULL);
-	cmd->redirs = NULL;
-	cmd->tok = NULL;
-	return (cmd);
+	shell = gc_calloc(gc, sizeof(t_shell));
+	if (!shell)
+		return (NULL);
+	shell->cmd = gc_calloc(gc, sizeof(t_cmd));
+	if (!shell->cmd)
+		return (NULL);
+	shell->cmd->args = gc_calloc(gc, sizeof(char *) * 100);
+	if (!shell->cmd->args)
+		return (NULL);
+	shell->gc = gc;
+	return (shell);
 }
 
-int	main(int ac, char **av)
+int main(void)
 {
-	t_cmd	*cmd;
+    char    *line;
+    t_shell *shell;
+    t_token *tok;
+    t_cmd   *cmd;
+    t_redir *r;
 
-	if (ac != 2)
-		return (0);
-	cmd = init_struct();
-	if (!cmd)
-	{
-		perror("init_strut");
-		exit(ENOMEM);
-	}
-	ultime_lexing(&cmd->tok, av[1], cmd->gc);
-	puts("=====TOKEN======");
-	t_token *tmp;
-	tmp = cmd->tok;
-	while (tmp)
-	{
-		printf("[%u] %s\n", tmp->type, tmp->value);
-		tmp = tmp->next;
-	}
-	ultime_filler(cmd);
-	puts("=====REDIRS======");
-	for (size_t i = 0; cmd->args[i]; i++)
-	{
-		printf("arg[%zu] = %s\n", i, cmd->args[i]);
-	}
-	while (cmd->redirs)
-	{
-		printf("\n[%u] %s\n", cmd->redirs->type, cmd->redirs->file);
-		cmd->redirs = cmd->redirs->next;
-	}
-	gc_destroy(cmd->gc);
-	free(cmd);
-	return (1);
+    while (1)
+    {
+        line = readline("minishell: ");
+        if (!line)
+            break;
+
+        if (*line)
+            add_history(line);
+
+        // --- NOUVEAU GC POUR CETTE LIGNE ---
+        shell = init_struct();
+        if (!shell)
+        {
+            perror("init_struct");
+            exit(1);
+        }
+
+        // --- LEXING ---
+        ultime_lexing(&shell->tok, line, shell->gc);
+		if (!shell->tok)
+		{
+			puts("yep");
+			gc_destroy(shell->gc);
+			free(line);
+			exit(1);
+		}
+		
+        // --- FILLER : CMD, ARGS, REDIRS ---
+        ultime_filler(shell);
+
+        // ----- DEBUG TOKENS -----
+        puts("=====TOKEN======");
+        tok = shell->tok;
+        while (tok)
+        {
+            printf("[%u] %s\n", tok->type, tok->value);
+            tok = tok->next;
+        }
+
+        // ----- DEBUG COMMANDES -----
+        cmd = shell->cmd;
+        while (cmd)
+        {
+            puts("===== CMD =====");
+            for (size_t i = 0; cmd->args && cmd->args[i]; i++)
+                printf("arg[%zu] = %s\n", i, cmd->args[i]);
+
+            // Redirections
+            r = cmd->redirs;
+            while (r)
+            {
+                printf("[%u] %s\n", r->type, r->file);
+                r = r->next;
+            }
+
+            cmd = cmd->next;
+        }
+
+        // Libération complète
+        gc_destroy(shell->gc);
+        free(line);
+    }
+    return (0);
 }
+
+
+// int	main(int ac, char **av)
+// {
+// 	t_shell	*shell;
+// 	char	*line;
+
+// 	// t_token	*tmp;
+// 	// t_cmd	*cur;
+// 	// t_redir	*r;
+// 	(void)av;
+// 	if (ac != 2)
+// 		return (0);
+// 	shell = init_struct();
+// 	if (!shell)
+// 	{
+// 		gc_destroy(shell->gc);
+// 		perror("minishell:");
+// 		exit(ENOMEM);
+// 	}
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (!line)
+// 			break ;
+// 		if (*line)
+// 			add_history(line);
+// 		ultime_lexing(&shell->tok, line, shell->gc);
+// 		ultime_filler(shell);
+// 		free(line);
+// 	}
+// 	// puts("=====TOKEN======");
+// 	// tmp = shell->tok;
+// 	// while (tmp)
+// 	// {
+// 	// 	printf("[%u] %s\n", tmp->type, tmp->value);
+// 	// 	tmp = tmp->next;
+// 	// }
+// 	// cur = shell->cmd;
+// 	// while (cur)
+// 	// {
+// 	// 	printf("===== CMD =====\n");
+// 	// 	for (size_t i = 0; cur->args[i]; i++)
+// 	// 		printf("arg[%zu] = %s\n", i, cur->args[i]);
+// 	// 	r = cur->redirs;
+// 	// 	while (r)
+// 	// 	{
+// 	// 		printf("[%u] %s\n", r->type, r->file);
+// 	// 		r = r->next;
+// 	// 	}
+// 	// 	cur = cur->next;
+// 	// }
+// 	gc_destroy(shell->gc);
+// 	return (1);
+// }

@@ -73,14 +73,20 @@ typedef struct s_cmd
 	char **args;     // ["ls", "-l", NULL]
 	t_redir *redirs; // liste de redirections
 	pid_t			pid;
-	t_token			*tok;
-	t_gc *gc;           // pour fork
 	struct s_cmd *next; // prochaine commande (pipe)
 }					t_cmd;
 
+typedef struct s_shell
+{
+	t_cmd			*cmd;
+	t_token			*tok;
+	t_envp			*envp;
+	t_gc			*gc;
+}					t_shell;
+
 void				free_array(char **av);
 void				ultime_lexing(t_token **tok, char *str, t_gc *gc);
-void				ultime_filler(t_cmd *cmd);
+void				ultime_filler(t_shell *s);
 void				lstadd_backtok(t_token **lst, t_token *new);
 void				lstadd_backredir(t_redir **lst, t_redir *new);
 
@@ -92,7 +98,7 @@ t_envp				*check_node(char *envp);
 int					is_whitespace(char *s);
 int					readline_check(t_envp *env);
 
-t_cmd				*init_struct(void);
+t_shell				*init_struct(void);
 
 t_token				*lstnew_token(t_gc *gc, char *value, t_token_type type);
 

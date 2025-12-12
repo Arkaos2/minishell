@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/05 18:02:35 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:36:41 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,3 +118,5 @@ void	ultime_lexing(t_token **tok, char *str, t_gc *gc)
 		v++;
 	}
 }
+
+

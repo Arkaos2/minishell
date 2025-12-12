@@ -6,63 +6,64 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/08 21:10:00 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:54:12 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	fill_args(t_cmd *cmd, int *i)
+static int	fill_args(t_shell *shell, t_cmd *cmd, int *i)
 {
 	char	*res;
 
-	if (!cmd->tok || cmd->tok->type != TOKEN_WORD)
+	if (!shell->tok || shell->tok->type != TOKEN_WORD)
 		return (0);
-	res = gc_strdup(cmd->gc, cmd->tok->value);
+	res = gc_strdup(shell->gc, shell->tok->value);
 	if (!res)
 		return (0);
-	cmd->args[(*i)++] = res;
+	cmd->args[(*i)] = res;
 	if (!cmd->args[*i])
 		return (0);
+	(*i)++;
 	return (1);
 }
 
-static t_redir	*pre_fill_redirs(t_cmd *cmd)
+static t_redir	*pre_fill_redirs(t_shell *shell)
 {
 	t_redir	*node;
 	char	*res;
 
-	node = gc_calloc(cmd->gc, sizeof(t_redir));
+	node = gc_calloc(shell->gc, sizeof(t_redir));
 	if (!node)
 		return (NULL);
-	res = gc_strdup(cmd->gc, cmd->tok->next->value);
+	res = gc_strdup(shell->gc, shell->tok->next->value);
 	if (!res)
 		return (NULL);
 	node->file = res;
 	if (!node->file)
 		return (NULL);
-	if (cmd->tok->type == TOKEN_REDIR_IN)
+	if (shell->tok->type == TOKEN_REDIR_IN)
 		node->type = R_IN;
-	else if (cmd->tok->type == TOKEN_REDIR_OUT)
+	else if (shell->tok->type == TOKEN_REDIR_OUT)
 		node->type = R_OUT;
-	else if (cmd->tok->type == TOKEN_REDIR_APPEND)
+	else if (shell->tok->type == TOKEN_REDIR_APPEND)
 		node->type = R_APPEND;
-	else if (cmd->tok->type == TOKEN_HEREDOC)
+	else if (shell->tok->type == TOKEN_HEREDOC)
 		node->type = R_HEREDOC;
 	node->next = NULL;
 	return (node);
 }
 
-static int	fill_redirs(t_cmd *cmd)
+static int	fill_redirs(t_shell *s, t_cmd *cmd)
 {
 	t_redir	*node;
 
-	if (!cmd->tok || !cmd->tok->next || cmd->tok->next->type != TOKEN_WORD)
+	if (!s->tok || !s->tok->next || s->tok->next->type != TOKEN_WORD)
 		return (0);
-	if (cmd->tok->type == 2 || cmd->tok->type == 3 || cmd->tok->type == 4
-		|| cmd->tok->type == 5)
+	if (s->tok->type == 2 || s->tok->type == 3 || s->tok->type == 4
+		|| s->tok->type == 5)
 	{
-		node = pre_fill_redirs(cmd);
+		node = pre_fill_redirs(s);
 		if (!node)
 			return (0);
 		if (!cmd->redirs)
@@ -74,56 +75,55 @@ static int	fill_redirs(t_cmd *cmd)
 	return (0);
 }
 
-t_cmd	*next_cmd(t_cmd *cmd)
+t_cmd	*next_cmd(t_shell *shell)
 {
-	t_cmd	*cur;
-	t_cmd	*new;
+	t_cmd	*cmd;
 
-	if (!cmd->tok || cmd->tok->type != TOKEN_PIPE)
+	cmd = gc_calloc(shell->gc, sizeof(t_cmd));
+	if (!cmd)
 		return (NULL);
-	cur = cmd;
-	new = init_struct();
-	if (!new)
-	{
-		gc_destroy(cmd->gc);
-		free(cmd);
-		exit(ENOMEM);
-	}
-	cur->next = new;
-	cur = new;
-	return (cur);
+	cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100);
+	if (!cmd->args)
+		return (NULL);
+	return (cmd);
 }
 
-void	ultime_filler(t_cmd *cmd)
+void	ultime_filler(t_shell *s)
 {
-	t_token	*tok;
-	t_cmd	*cur;
+	t_cmd	*cmd;
 	int		v;
 
 	v = 0;
-	cur = cmd;
-	tok = cmd->tok;
-	while (cur->tok)
+	cmd = s->cmd;
+	while (s->tok)
 	{
-		// if (cur->tok->type == TOKEN_PIPE)
-		// {
-		// 	v = 0;
-		// 	next_cmd(cur);
-		// 	cur = cur->next;
-		// }
-		if (fill_redirs(cur))
+		if (s->tok->type == TOKEN_PIPE)
 		{
-			if (cur->tok && cur->tok->next)
-				cur->tok = cur->tok->next->next;
+			cmd->next = next_cmd(s);
+			if (!cmd->next)
+			{
+				gc_destroy(s->gc);
+				perror("minishell:");
+				exit (1);
+			}
+			cmd = cmd->next;
+			v = 0;
+			s->tok = s->tok->next;
+			continue ;
+		}
+		if (fill_redirs(s, cmd))
+		{
+			if (s->tok && s->tok->next)
+				s->tok = s->tok->next->next;
 			else
-				cur->tok = NULL;
+				s->tok = NULL;
 			continue ;
 		}
-		if (fill_args(cur, &v))
+		if (fill_args(s, cmd, &v))
 		{
-			cur->tok = cur->tok->next;
+			s->tok = s->tok->next;
 			continue ;
 		}
-		cur->tok = cur->tok->next;
+		s->tok = s->tok->next;
 	}
 }
