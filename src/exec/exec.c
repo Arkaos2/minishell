@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/10 19:57:47 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/12 15:58:15 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 	envp = env_to_char(shell);
 	if (!envp)
 		cleanup_on_error(shell);
-	path = get_cmd_path(cmd->args[0], shell->exec->env, shell->gc);
+	path = get_cmd_path(cmd->args[0], shell->env, shell->gc);
 	if (!path)
 	{
 		ft_fprintf(2, "%s: command not found\n", cmd->args[0]);

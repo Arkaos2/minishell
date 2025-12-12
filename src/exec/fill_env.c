@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   fill_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:51:17 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/10 19:57:48 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/12 15:58:15 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	**fill_envp(t_shell *shell, int size)
 	envp = gc_calloc(shell->gc, (size + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
-	tmp = shell->exec->env;
+	tmp = shell->env;
 	while (tmp)
 	{
 		if (tmp->value)
@@ -65,9 +65,9 @@ char	**env_to_char(t_shell *shell)
 	int		size;
 	char	**envp;
 
-	if (!shell->exec->env)
+	if (!shell->env)
 		return (NULL);
-	size = count_env(shell->exec->env);
+	size = count_env(shell->env);
 	envp = fill_envp(shell, size);
 	return (envp);
 }

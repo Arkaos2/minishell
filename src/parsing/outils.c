@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/10 17:30:58 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 18:09:09 by saibelab         ###   ########.fr       */
+/*   Created: 2025/11/27 18:17:26 by pmalumba          #+#    #+#             */
+/*   Updated: 2025/12/04 19:53:43 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_env(t_envp *env)
+
+void	free_array(char **av)
 {
-	while(env)
-	{
-		if(!env->value)
-			ft_fprintf(STDOUT_FILENO, "%s\n", env->key);
-		else
-			ft_fprintf(STDOUT_FILENO, "%s=%s\n", env->key, env->value);
-		env = env->next;
-	}
+	int	v;
+
+	if (!av || !av[0])
+		return ;
+	v = 0;
+	while (av[v])
+		free(av[v++]);
+	free(av);
+	av = NULL;
 }
+
+
+

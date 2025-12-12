@@ -1,25 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/25 17:00:34 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/25 18:35:43 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
+/*   Updated: 2025/12/08 20:10:59 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	is_quote(char x)
-{
-	if(x == 40 || x == 34)
-		return (1);
-	return(0);
-}
+#include "minishell.h"
 
-int	is_redirection(char x)
-{
-	if(x == '<' || x == '>' || x == '|')
-		return (1);
-	return (0);
-}
+

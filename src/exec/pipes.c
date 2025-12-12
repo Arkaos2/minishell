@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/10 19:58:57 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/12 18:15:08 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,15 @@ void run_pipes(t_shell *shell)
 	int		status;
 	t_cmd	*cmd;
 
+	if (!shell || !shell->exec)
+		return ;
 	shell->exec->nb_cmd = count_cmds(shell->exec->cmd_list);
+	if (shell->exec->nb_cmd == 1 && shell->exec->cmd_list && shell->exec->cmd_list->args
+		&& shell->exec->cmd_list->args[0] && is_builtin(shell->exec->cmd_list->args[0]))
+	{
+		handle_builtin(shell->exec->cmd_list, shell->env);
+		return ;
+	}
 	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc);
 	if (!shell->exec->pipes && shell->exec->nb_cmd > 1)
 		cleanup_on_error(shell);
@@ -88,8 +96,12 @@ void run_pipes(t_shell *shell)
 	while (cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) > 0)
+		{
 			if (WIFEXITED(status))
 				shell->exec->last_exit = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				shell->exec->last_exit = 128 + WTERMSIG(status);
+		}
 		cmd = cmd->next;
 	}
 	shell->exec->pipes = NULL;
