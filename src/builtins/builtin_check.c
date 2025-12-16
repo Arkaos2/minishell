@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:03:02 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 17:58:53 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/16 17:28:31 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,20 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-void	handle_builtin(t_cmd *cmd, t_envp *env)
+void	handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc)
 {
 	if (strcmp(cmd->args[0], "echo") == 0)
 		handle_echo(cmd);
-	// else if (strcmp(cmd->args[0], "cd") == 0)
-	// 	handle_cd(cmd, exec);
+	else if (strcmp(cmd->args[0], "cd") == 0)
+		handle_cd(cmd, env, gc);
 	// else if (strcmp(cmd->args[0], "exit") == 0)
-	// 	handle_exit(cmd, exec);
+	// 	handle_exit(cmd);
 	else if (strcmp(cmd->args[0], "env") == 0)
 		handle_env(env);
 // 	else if (strcmp(cmd->args[0], "export") == 0)
-// 		handle_export(cmd, exec);
+// 		handle_export(cmd);
 // 	else if (strcmp(cmd->args[0], "unset") == 0)
-// 		handle_unset(cmd, exec);
-// 	else if (strcmp(cmd->args[0], "pwd") == 0)
-// 		handle_pwd(cmd, exec);
-//
+// 		handle_unset(cmd);
+	else if (strcmp(cmd->args[0], "pwd") == 0)
+		handle_pwd(env);
 }

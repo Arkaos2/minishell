@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 19:30:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/12 18:19:00 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:07:10 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,13 @@ static t_shell	*init_struct(void)
 	return (shell);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-    char    *line;
-    t_shell *shell;
+	char	*line;
+	t_shell *shell;
 	(void)argc;
 	(void)argv;
 
-	/* non-interactive mode: read from stdin when not a TTY using get_next_line */
 	if (!isatty(STDIN_FILENO))
 	{
 		char *gline;
@@ -62,7 +61,6 @@ int main(int argc, char **argv, char **envp)
 			size_t len = ft_strlen(gline);
 			if (len > 0 && gline[len - 1] == '\n')
 				gline[len - 1] = '\0';
-
 			if (*gline == '\0')
 			{
 				free(gline);
@@ -85,23 +83,18 @@ int main(int argc, char **argv, char **envp)
 				shell->exec->cmd_list = shell->cmd;
 				run_pipes(shell);
 			}
-
-			/* cleanup */
 			gc_destroy(shell->gc);
 			free(gline);
 		}
 		return (0);
 	}
-
 	while (1)
 	{
 		line = readline("minishell: ");
 		if (!line)
 			break;
-		if (*line)
+		if (*line && !is_whitespace(line))
 			add_history(line);
-
-
 		shell = init_struct();
 		if (!shell)
 		{
@@ -109,7 +102,6 @@ int main(int argc, char **argv, char **envp)
 			free(line);
 			continue;
 		}
-
 	shell->env = create_envp(shell->gc, envp);
 	shell->exec->env = shell->env;
 		shell->tok = NULL;

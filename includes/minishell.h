@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 18:03:43 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:35:51 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ typedef struct s_shell
 }			t_shell;
 
 
-void	fill_all_heredocs(t_shell *shell);
-int	setup_heredoc_input(t_shell *shell, t_cmd *cmd);
-void	heredoc_sigint_handler(int sig);
+void		fill_all_heredocs(t_shell *shell);
+int			setup_heredoc_input(t_shell *shell, t_cmd *cmd);
+void		heredoc_sigint_handler(int sig);
 
 void		free_cmds(t_cmd *cmd);
 void		free_envp(t_envp *env);
@@ -132,16 +132,20 @@ void		run_children(t_shell *shell);
 void		run_pipes(t_shell *shell);
 void		exec_child(t_cmd *cmd, t_shell *shell);
 void		setup_child_fds(t_cmd *cmd, t_shell *shell, int i);
-int		check_redirs(t_cmd *cmd);
-void	cleanup_on_error(t_shell *shell);
-void	safe_exit(t_shell *shell, int code);
+int			check_redirs(t_cmd *cmd);
+void		cleanup_on_error(t_shell *shell);
+void		safe_exit(t_shell *shell, int code);
 
-int		is_builtin(char *cmd);
-void		handle_builtin(t_cmd *cmd, t_envp *env);
-void	handle_echo(t_cmd *cmd);
-void	handle_env(t_envp *env);
+int			is_builtin(char *cmd);
+void		handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc);
+void		handle_echo(t_cmd *cmd);
+void		handle_env(t_envp *env);
+void		update_env(t_envp *env, char *key, char *value, t_gc *gc);
+char		*get_env_value(t_envp *env, char *key);
+void		handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
+void		handle_pwd(t_envp *env);
 
-void	print_redirs(t_redir *r);
+void		print_redirs(t_redir *r);
 
 char		**env_to_char(t_shell *shell);
 
@@ -150,16 +154,19 @@ int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 void		free_pipes(int **pipes, int n);
 
-void	ultime_lexing(t_token **tok, char *str, t_gc *gc);
-t_cmd	*next_cmd(t_shell *shell);
-void	free_array(char **av);
-void	ultime_filler(t_shell *s);
+void		ultime_lexing(t_token **tok, char *str, t_gc *gc);
+t_cmd		*next_cmd(t_shell *shell);
+void		free_array(char **av);
+void		ultime_filler(t_shell *s);
 
 
-t_token	*lstnew_token(t_gc *gc, char *value, t_token_type type);
-t_redir	*lstnew_redir(t_gc *gc, char *value, t_redir_type type);
-void	lstadd_backredir(t_redir **lst, t_redir *new);
-void	lstadd_backtok(t_token **lst, t_token *new);
+t_token		*lstnew_token(t_gc *gc, char *value, t_token_type type);
+t_redir		*lstnew_redir(t_gc *gc, char *value, t_redir_type type);
+void		lstadd_backredir(t_redir **lst, t_redir *new);
+void		lstadd_backtok(t_token **lst, t_token *new);
 
+int					readline_check(t_envp *env);
+int					double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
+int					single_quote(t_token **tok, char *str, int *i, t_gc *gc);
 
 #endif

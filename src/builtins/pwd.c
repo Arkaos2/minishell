@@ -1,15 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/08 20:10:59 by pmalumba         ###   ########.fr       */
+/*   Created: 2025/12/16 16:16:27 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/16 17:23:43 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	handle_pwd(t_envp *env)
+{
+	char	*cwd;
+	char	*pwd;
+
+	cwd = getcwd(NULL, 0);
+	pwd = get_env_value(env, "PWD");
+
+	if (pwd && ft_strcmp(pwd, cwd) == 0)
+		printf("%s\n", pwd);
+	else
+		printf("%s\n", cwd);
+
+	free(cwd);
+}
 

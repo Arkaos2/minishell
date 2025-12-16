@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:10:38 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 17:54:39 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:17:24 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	handle_echo(t_cmd *cmd)
 	while(cmd->args[i])
 	{
 		len = ft_strlen(cmd->args[i]);
-		write(STDOUT_FILENO, &cmd->args[i], len);
+		write(STDOUT_FILENO, cmd->args[i], len);
 		if (cmd->args[i + 1])
 			write(STDOUT_FILENO, " ", 1);
 		i++;

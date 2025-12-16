@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 18:15:08 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:16:38 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,12 @@ void run_pipes(t_shell *shell)
 	if (!shell || !shell->exec)
 		return ;
 	shell->exec->nb_cmd = count_cmds(shell->exec->cmd_list);
-	if (shell->exec->nb_cmd == 1 && shell->exec->cmd_list && shell->exec->cmd_list->args
-		&& shell->exec->cmd_list->args[0] && is_builtin(shell->exec->cmd_list->args[0]))
+	if (shell->exec->nb_cmd == 1 && shell->exec->cmd_list
+		&& shell->exec->cmd_list->args
+		&& shell->exec->cmd_list->args[0]
+		&& is_builtin(shell->exec->cmd_list->args[0]))
 	{
-		handle_builtin(shell->exec->cmd_list, shell->env);
+		handle_builtin(shell->exec->cmd_list, shell->env, shell->gc);
 		return ;
 	}
 	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc);
