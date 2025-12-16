@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/12 16:36:41 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/16 17:41:15 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	tokenword(t_token **tok, char *str, int *i, t_gc *gc)
 		return (0);
 	start = *i;
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '<'
-		&& str[*i] != '>' && str[*i] != '|')
+		&& str[*i] != '>' && str[*i] != '|' && str[*i] != 39)
 	{
 		(*i)++;
 	}
@@ -107,6 +107,10 @@ void	ultime_lexing(t_token **tok, char *str, t_gc *gc)
 	v = 0;
 	while (str[v])
 	{
+		if (double_quotes(tok, str, &v, gc))
+			continue ;
+		if (single_quote(tok, str, &v, gc))
+			continue ;
 		if (redir_inxheredoc(tok, str, &v, gc))
 			continue ;
 		if (redir_outxappend(tok, str, &v, gc))

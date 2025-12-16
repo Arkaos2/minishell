@@ -82,6 +82,7 @@ typedef struct s_shell
 	t_token			*tok;
 	t_envp			*envp;
 	t_gc			*gc;
+	int				save;
 }					t_shell;
 
 void				free_array(char **av);
@@ -97,6 +98,8 @@ t_envp				*check_node(char *envp);
 
 int					is_whitespace(char *s);
 int					readline_check(t_envp *env);
+int					double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
+int					single_quote(t_token **tok, char *str, int *i, t_gc *gc);
 
 t_shell				*init_struct(void);
 
