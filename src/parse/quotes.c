@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/16 17:41:06 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/20 17:31:10 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ int	double_quotes(t_token **tok, char *str, int *i, t_gc *gc)
 	flag = *i;
 	while (str[*i] && str[*i] != '"')
 		(*i)++;
+	if (!str[*i])
+		return (-1);
 	res = ft_substr(str, flag, *i - flag);
 	if (!res)
-		return (0);
+		return (-1);
 	node = lstnew_token(gc, res, TOKEN_WORD);
 	if (!node)
-		return (free(res), 0);
+		return (free(res), -1);
 	lstadd_backtok(tok, node);
 	free(res);
 	if (str[*i] == '"')
@@ -49,12 +51,14 @@ int	single_quote(t_token **tok, char *str, int *i, t_gc *gc)
 	flag = *i;
 	while (str[*i] && str[*i] != '\'')
 		(*i)++;
+	if (!str[*i])
+		return (-1);
 	res = ft_substr(str, flag, *i - flag);
 	if (!res)
-		return (0);
+		return (-1);
 	node = lstnew_token(gc, res, TOKEN_WORD);
 	if (!node)
-		return (free(res), 0);
+		return (free(res), -1);
 	lstadd_backtok(tok, node);
 	free(res);
 	if (str[*i] == '\'')

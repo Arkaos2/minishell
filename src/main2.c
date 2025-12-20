@@ -6,13 +6,13 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 19:30:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/16 17:41:32 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:39:04 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_shell	*init_struct(void)
+static t_shell	*init_struct(char **envp)
 {
 	t_shell	*shell;
 	t_gc	*gc;
@@ -30,80 +30,92 @@ t_shell	*init_struct(void)
 	if (!shell->cmd->args)
 		return (NULL);
 	shell->gc = gc;
+	shell->envp = envp;
 	return (shell);
 }
 
-int main(void)
+static int	check_syntaxe(char *str)
 {
-    char    *line;
-    t_shell *shell;
-    t_token *tok;
-    t_cmd   *cmd;
-    t_redir *r;
+	int	len;
 
-    while (1)
-    {
-        line = readline("minishell: ");
-        if (!line)
-            break ;
+	len = ft_strlen(str) - 1;
+	while (str[len] == 32 || (str[len] >= 9 && str[len] <= 13))
+		len--;
+	if (str[len] == '<' || str[len] == '>' || str[len] == '|')
+	{
+		free(str);
+		ft_fprintf(2,
+			"minishell: syntax error near unexpected token `newline'\n");
+		return (0);
+	}
+	return (1);
+}
 
-        if (*line)
-            add_history(line);
+int	main(int ac, char **av, char **envp)
+{
+	char	*line;
+	t_shell	*shell;
+	t_token	*tok;
+	t_cmd	*cmd;
+	t_redir	*r;
 
-        // --- NOUVEAU GC POUR CETTE LIGNE ---
-        shell = init_struct();
-        if (!shell)
-        {
-            perror("init_struct");
-            exit(1);
-        }
-
-        // --- LEXING ---
-        ultime_lexing(&shell->tok, line, shell->gc);
-		if (!shell->tok)
+	(void)av;
+	if (ac != 1)
+		return (1);
+	while (1)
+	{
+		line = readline("minishell: ");
+		if (!line)
+			break ;
+		if (*line)
+			add_history(line);
+		if (!check_syntaxe(line))
+			continue ;
+		// --- NOUVEAU GC POUR CETTE LIGNE ---
+		shell = init_struct(envp);
+		if (!shell)
 		{
-			puts("yep");
+			perror("minishell: ");
+			return (1);
+		}
+		// --- LEXING ---
+		if (!ultime_lexing(&shell->tok, line, shell->gc, shell))
+		{
 			gc_destroy(shell->gc);
 			free(line);
-			exit(1);
+			continue ;
 		}
-
-        // --- FILLER : CMD, ARGS, REDIRS ---
-        ultime_filler(shell);
-
-        // ----- DEBUG TOKENS -----
-        puts("=====TOKEN======");
-        tok = shell->tok;
-        while (tok)
-        {
-            printf("[%u] %s\n", tok->type, tok->value);
-            tok = tok->next;
-        }
-
-        // ----- DEBUG COMMANDES -----
-        cmd = shell->cmd;
-        while (cmd)
-        {
-            puts("===== CMD =====");
-            for (size_t i = 0; cmd->args && cmd->args[i]; i++)
-                printf("arg[%zu] = %s\n", i, cmd->args[i]);
-
-            // Redirections
-            r = cmd->redirs;
-            while (r)
-            {
-                printf("[%u] %s\n", r->type, r->file);
-                r = r->next;
-            }
-
-            cmd = cmd->next;
-        }
-
-        // Libération complète
-        gc_destroy(shell->gc);
-        free(line);
-    }
-    return (0);
+		// --- FILLER : CMD, ARGS, REDIRS ---
+		ultime_filler(shell);
+		// ----- DEBUG TOKENS -----
+		puts("=====TOKEN======");
+		tok = shell->tok;
+		while (tok)
+		{
+			printf("[%u] %s\n", tok->type, tok->value);
+			tok = tok->next;
+		}
+		// ----- DEBUG COMMANDES -----
+		cmd = shell->cmd;
+		while (cmd)
+		{
+			puts("===== CMD =====");
+			for (size_t i = 0; cmd->args && cmd->args[i]; i++)
+				printf("arg[%zu] = %s\n", i, cmd->args[i]);
+			// Redirections
+			r = cmd->redirs;
+			while (r)
+			{
+				printf("[%u] %s\n", r->type, r->file);
+				r = r->next;
+			}
+			cmd = cmd->next;
+		}
+		// Libération complète
+		gc_destroy(shell->gc);
+		free(line);
+	}
+	return (0);
 }
 
 // int	main(int ac, char **av)

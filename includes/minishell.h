@@ -25,6 +25,7 @@ t_gc				*gc_new(void);
 void				gc_destroy(t_gc *gc);
 void				*gc_calloc(t_gc *gc, size_t size);
 char				*gc_strdup(t_gc *gc, const char *s);
+char				*gc_strjoin(t_gc *gc, char const *s1, char const *s2);
 char				*gc_strndup(t_gc *gc, const char *s, int n);
 t_gcnode			*new_node(void *ptr);
 
@@ -49,6 +50,7 @@ typedef enum e_token_type
 typedef struct s_token
 {
 	char			*value;
+	int				quote;
 	t_token_type	type;
 	struct s_token	*next;
 }					t_token;
@@ -80,18 +82,21 @@ typedef struct s_shell
 {
 	t_cmd			*cmd;
 	t_token			*tok;
-	t_envp			*envp;
+	char			**envp;
 	t_gc			*gc;
-	int				save;
+	int				status;
 }					t_shell;
 
 void				free_array(char **av);
-void				ultime_lexing(t_token **tok, char *str, t_gc *gc);
+
 void				ultime_filler(t_shell *s);
 void				lstadd_backtok(t_token **lst, t_token *new);
 void				lstadd_backredir(t_redir **lst, t_redir *new);
 
 char				*key_finder(char *envp);
+char				*dollars_conv(t_shell *s, char *name);
+char				*after_dollars(char *str);
+char				*expand_dollars(t_shell *s, char *str);
 
 t_envp				*create_envp(char **envp);
 t_envp				*check_node(char *envp);
@@ -100,8 +105,9 @@ int					is_whitespace(char *s);
 int					readline_check(t_envp *env);
 int					double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
 int					single_quote(t_token **tok, char *str, int *i, t_gc *gc);
-
-t_shell				*init_struct(void);
+int					handle_quotes(t_token **tok, char *str, int *i, t_shell *s);
+int					ultime_lexing(t_token **tok, char *str, t_gc *gc,
+						t_shell *s);
 
 t_token				*lstnew_token(t_gc *gc, char *value, t_token_type type);
 

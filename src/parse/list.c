@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 19:53:21 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/05 19:14:09 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/19 16:25:17 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,7 @@ void	lstadd_backtok(t_token **lst, t_token *new)
 		temp->next = new;
 	}
 }
+
+
 
 

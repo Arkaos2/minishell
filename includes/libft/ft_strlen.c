@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 15:50:37 by saibelab          #+#    #+#             */
-/*   Updated: 2025/09/23 15:25:01 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/19 16:59:16 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	len;
 
+	if (!s)
+		return (0);
 	len = 0;
 	while (*s++)
 		len++;

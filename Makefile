@@ -6,7 +6,7 @@
 #    By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/12 17:38:32 by pmalumba         ###   ########.fr        #
+#    Updated: 2025/12/19 16:41:20 by pmalumba         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ src/main2.c \
 src/parse/lexing.c \
 src/parse/list.c \
 src/parse/quotes.c \
+src/parse/expand.c \
 
 
 OBJS			= $(SRCS:.c=.o)
