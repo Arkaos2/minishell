@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:03:02 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 17:18:19 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 19:48:26 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	is_builtin(char *cmd)
 		"export",
 		NULL
 	};
-
 	i = 0;
 	while (builtins[i] != NULL)
 	{

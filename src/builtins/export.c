@@ -6,26 +6,28 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:47:50 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 17:32:39 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 19:00:47 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_export(t_cmd *cmd, t_envp *env)
+int	check_export(t_cmd *cmd)
 {
-	t_cmd *tmp;
 	int i;
 
-	i = 0;
-	tmp = cmd;
-	while (tmp->args[i])
+	if (!cmd || !cmd->args)
+		return (0);
+	i = 1;
+	while (cmd->args[i])
 	{
-		if(!ft_isalpha(tmp->args[i][0]) || tmp->args[i][0] == '_')
-			return (ft_fprintf(2, "minishell: export: '%s': not a valid identifier\n", tmp->args[i]), 1);
-		
+		if (!cmd->args[i][0])
+			return (0);
+		if (!ft_isalpha(cmd->args[i][0]) && cmd->args[i][0] != '_')
+			return (ft_fprintf(2, "minishell: export: '%s': not a valid identifier\n", cmd->args[i]), 1);
+		i++;
 	}
-
+	return (0);
 }
 
 void	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
@@ -53,7 +55,7 @@ void	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
 		}
 		i++;
 	}
-	if(!cmd->args[1])
-		print_export(env, 1);
+	if (!cmd->args[1])
+		handle_env(env, 1);
 }
 

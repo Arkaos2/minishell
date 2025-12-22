@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/17 17:04:42 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 20:15:11 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,14 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 
 static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 {
-	setup_heredoc_input(shell, cmd);
 	setup_child_fds(cmd, shell, i);
+	setup_heredoc_input(shell, cmd);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
+	if (cmd && cmd->args && cmd->args[0] && is_builtin(cmd->args[0]))
+	{
+		handle_builtin(cmd, shell->env, shell->gc);
+		safe_exit(shell, 0);
+	}
 	exec_child(cmd, shell);
 }
 

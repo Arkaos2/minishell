@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 17:30:58 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 17:17:05 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 18:59:46 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ static void	print_export(t_envp *env)
 	}
 }
 
-int	handle_env(t_envp *env, int flag)
+void	handle_env(t_envp *env, int flag)
 {
-	if(flag == 1)
+	if (flag == 1)
 		print_export(env);
 	else
 		print_env(env);
-
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/10 19:57:48 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 20:07:09 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 		content = gc_strjoin(shell->gc, content, "\n");
 		free(line);
 	}
-	rl_clear_history();
 	return (content);
 }
 
