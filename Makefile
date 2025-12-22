@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/16 18:35:59 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/22 15:48:24 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ SRCS			= src/main.c \
 			src/builtins/echo.c \
 			src/builtins/env.c \
 			src/builtins/cd.c \
-			src/builtins/pwd.c
+			src/builtins/pwd.c \
+			src/builtins/export.c
 
 OBJS			= $(SRCS:.c=.o)
 

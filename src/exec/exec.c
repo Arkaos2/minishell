@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 15:58:15 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:04:42 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ static pid_t	spawn_child(t_shell *shell, int i)
 			return (-1);
 		}
 	}
+	char *cwd = getcwd(NULL, 0);
+	free(cwd);
+
 	pid = fork();
 	if (pid < 0)
 	{

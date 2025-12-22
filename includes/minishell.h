@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/28 17:11:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/16 18:35:51 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/22 17:18:38 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,11 +139,13 @@ void		safe_exit(t_shell *shell, int code);
 int			is_builtin(char *cmd);
 void		handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc);
 void		handle_echo(t_cmd *cmd);
-void		handle_env(t_envp *env);
+void		handle_env(t_envp *env, int flag);
 void		update_env(t_envp *env, char *key, char *value, t_gc *gc);
 char		*get_env_value(t_envp *env, char *key);
 void		handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
 void		handle_pwd(t_envp *env);
+void		handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
+
 
 void		print_redirs(t_redir *r);
 

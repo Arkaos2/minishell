@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibHITCHENS <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 19:30:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/16 15:07:10 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:04:43 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* debug removed */
 
 static t_shell	*init_struct(void)
 {
@@ -31,17 +29,13 @@ static t_shell	*init_struct(void)
 	shell->cmd->args = gc_calloc(gc, sizeof(char *) * 100);
 	if (!shell->cmd->args)
 		return (NULL);
-
-	/* allocate exec structure used by the rest of the engine */
 	shell->exec = gc_calloc(gc, sizeof(t_exec));
 	if (!shell->exec)
 		return (NULL);
 	shell->exec->cmd_list = shell->cmd;
-	shell->exec->env = NULL;
 	shell->exec->pipes = NULL;
 	shell->exec->nb_cmd = 0;
 	shell->exec->last_exit = 0;
-
 	shell->gc = gc;
 	return (shell);
 }
@@ -74,7 +68,6 @@ int	main(int argc, char **argv, char **envp)
 				continue;
 			}
 			shell->env = create_envp(shell->gc, envp);
-			shell->exec->env = shell->env;
 			shell->tok = NULL;
 			ultime_lexing(&shell->tok, gline, shell->gc);
 			if (shell->tok)
@@ -88,37 +81,50 @@ int	main(int argc, char **argv, char **envp)
 		}
 		return (0);
 	}
-	while (1)
-	{
-		line = readline("minishell: ");
-		if (!line)
-			break;
-		if (*line && !is_whitespace(line))
-			add_history(line);
-		shell = init_struct();
-		if (!shell)
-		{
-			perror("init_struct");
-			free(line);
-			continue;
-		}
-	shell->env = create_envp(shell->gc, envp);
-	shell->exec->env = shell->env;
+	shell = init_struct();
+    if (!shell)
+        return (1);
+    shell->env = create_envp(shell->gc, envp);
+
+    while (1)
+    {
+        line = readline("minishell: ");
+        if (!line)
+            break;
+
+        if (*line && !is_whitespace(line))
+            add_history(line);
+
+		/* prepare a fresh command structure for this input */
 		shell->tok = NULL;
-		ultime_lexing(&shell->tok, line, shell->gc);
-		if (!shell->tok)
+		shell->cmd = gc_calloc(shell->gc, sizeof(t_cmd));
+		if (!shell->cmd)
 		{
-			gc_destroy(shell->gc);
+			perror("gc_calloc");
 			free(line);
 			continue;
 		}
-		ultime_filler(shell);
-	shell->exec->cmd_list = shell->cmd;
-	run_pipes(shell);
-	gc_destroy(shell->gc);
-	free(line);
-	}
-	return (0);
+		shell->cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100);
+		if (!shell->cmd->args)
+		{
+			perror("gc_calloc");
+			free(line);
+			continue;
+		}
+		shell->exec->cmd_list = shell->cmd;
+        ultime_lexing(&shell->tok, line, shell->gc);
+        if (shell->tok)
+        {
+            ultime_filler(shell);
+            shell->exec->cmd_list = shell->cmd;
+            run_pipes(shell); // builtins modifient le bon env et cwd
+        }
+
+        free(line);
+        // ❌ PAS DE gc_destroy ICI
+    }
+    gc_destroy(shell->gc); // ✅ UNE SEULE FOIS
+    return (0);
 }
 
 

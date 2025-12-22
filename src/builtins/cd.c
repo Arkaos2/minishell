@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:39:04 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/16 18:56:13 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/22 15:58:26 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,30 @@ char	*get_env_value(t_envp *env, char *key)
 
 void	update_env(t_envp *env, char *key, char *value, t_gc *gc)
 {
+	t_envp	*new;
+
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
 		{
-			env->value = gc_strdup(gc, value);
+			if (value == NULL)
+				env->value = NULL;
+			else
+				env->value = gc_strdup(gc, value);
 			return;
 		}
+		if (!env->next)
+			break;
 		env = env->next;
 	}
+	new = gc_calloc(gc, sizeof(t_envp));
+	new->key = gc_strdup(gc, key);
+	if (value == NULL)
+		new->value = NULL;
+	else
+		new->value = gc_strdup(gc, value);
+	new->next = NULL;
+	env->next = new;
 }
 
 void	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
@@ -43,7 +58,6 @@ void	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 	char	*path;
 
 	oldpwd = getcwd(NULL, 0);
-
 	if (!cmd->args[1])
 		path = get_env_value(env, "HOME");
 	else
@@ -55,12 +69,9 @@ void	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 		free(oldpwd);
 		return;
 	}
-
 	newpwd = getcwd(NULL, 0);
-
 	update_env(env, "OLDPWD", oldpwd, gc);
 	update_env(env, "PWD", newpwd, gc);
-	printf("CD EXEC PID = %d\n", getpid());
 	free(oldpwd);
 	free(newpwd);
 }

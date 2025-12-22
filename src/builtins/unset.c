@@ -1,43 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 16:54:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/17 15:59:11 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/22 16:02:37 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/22 16:42:06 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cleanup_on_error(t_shell *shell)
+void	handle_unset(t_cmd *cmd, t_envp *env, t_gc)
 {
-	safe_exit(shell, 1);
-}
-
-void	safe_exit(t_shell *shell, int code)
-{
-	if (shell && shell->gc)
-		gc_destroy(shell->gc);
-	exit(code);
-}
-
-void	close_all_pipes(int **pipes, int nb_cmd)
-{
-	int i;
-
-	if (!pipes)
-		return ;
-	i = 0;
-	while (i < nb_cmd - 1 && i < 2)
+	while(env)
 	{
-		if (pipes[i][0] >= 0)
-			close(pipes[i][0]);
-		if (pipes[i][1] >= 0)
-			close(pipes[i][1]);
-		i++;
+		if(ft_strcmp(env->key, cmd->args[1]))
+		
 	}
 }
-
