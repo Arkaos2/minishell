@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 19:30:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 18:39:04 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/22 18:00:43 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,6 @@ static t_shell	*init_struct(char **envp)
 	return (shell);
 }
 
-static int	check_syntaxe(char *str)
-{
-	int	len;
-
-	len = ft_strlen(str) - 1;
-	while (str[len] == 32 || (str[len] >= 9 && str[len] <= 13))
-		len--;
-	if (str[len] == '<' || str[len] == '>' || str[len] == '|')
-	{
-		free(str);
-		ft_fprintf(2,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (0);
-	}
-	return (1);
-}
 
 int	main(int ac, char **av, char **envp)
 {
