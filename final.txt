@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/22 15:48:24 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/09 18:10:19 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,25 +17,15 @@ LDFLAGS			= -lreadline
 
 SRCS			= src/main.c \
 			src/gc.c \
-			src/environement/environement.c \
+			src/parsing/environement.c \
+			src/parsing/lexer.c \
 			src/exec/check_path.c \
-			src/exec/fill_env.c \
+			src/exec/env.c \
 			src/exec/exec.c \
 			src/exec/pipes.c \
 			src/exec/free.c \
 			src/exec/redirection.c \
-			src/exec/here_doc.c \
-			src/parsing/list.c \
-			src/parsing/outils.c \
-			src/parsing/redirs.c \
-			src/parsing/quotes.c \
-			src/parsing/lexing.c \
-			src/builtins/builtin_check.c \
-			src/builtins/echo.c \
-			src/builtins/env.c \
-			src/builtins/cd.c \
-			src/builtins/pwd.c \
-			src/builtins/export.c
+			src/exec/here_doc.c
 
 OBJS			= $(SRCS:.c=.o)
 

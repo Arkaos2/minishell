@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 17:02:30 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:37:50 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/16 16:16:27 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/17 17:17:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strchr(const char *s, int c )
+void	handle_pwd(t_envp *env)
 {
-	char	*str;
+	char	*cwd;
+	char	*pwd;
 
-	str = (char *)s;
-	while (*str)
-	{
-		if (*str == (char)c)
-			return (str);
-		str++;
-	}
-	if (*str == (char)c)
-		return (str);
-	return (NULL);
+	cwd = getcwd(NULL, 0);
+	pwd = get_env_value(env, "PWD");
+	if (pwd && ft_strcmp(pwd, cwd) == 0)
+		printf("%s\n", pwd);
+	else
+		printf("%s\n", cwd);
+	free(cwd);
 }
+

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fprintf.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 11:07:23 by bdjoco            #+#    #+#             */
-/*   Updated: 2025/10/26 15:07:42 by miltavar         ###   ########.fr       */
+/*   Created: 2025/12/04 16:24:10 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/04 16:24:11 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef FT_FPRINTF_H
 # define FT_FPRINTF_H

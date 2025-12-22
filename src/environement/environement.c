@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:00:25 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:12:43 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ char	*key_finder(t_gc *gc, char *envp)
 {
 	int		i;
 	char	*key;
+
+	(void)gc;
 
 	i = 0;
 	while (envp[i] != '=')
@@ -32,14 +34,16 @@ t_envp *check_node(t_gc *gc, char *envp)
 {
 	t_envp *node;
 
+	if (!envp)
+		return (NULL);
 	node = gc_calloc(gc, sizeof(t_envp));
-		if (!node)
-			return (NULL);
-		node->key = key_finder(gc, envp);
-		if (!node->key)
-			return(free(node), NULL);
-		node->value = ft_strdup(ft_strchr(envp, '='));
-		node->next = NULL;
+	if (!node)
+		return (NULL);
+	node->key = key_finder(gc, envp);
+	if (!node->key)
+		return (NULL);
+	node->value = gc_strdup(gc, ft_strchr(envp, '=') + 1);
+	node->next = NULL;
 	return (node);
 }
 

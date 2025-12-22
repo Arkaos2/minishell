@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 17:02:30 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:37:50 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/22 16:02:37 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/22 16:42:06 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strchr(const char *s, int c )
+void	handle_unset(t_cmd *cmd, t_envp *env, t_gc)
 {
-	char	*str;
-
-	str = (char *)s;
-	while (*str)
+	while(env)
 	{
-		if (*str == (char)c)
-			return (str);
-		str++;
+		if(ft_strcmp(env->key, cmd->args[1]))
+		
 	}
-	if (*str == (char)c)
-		return (str);
-	return (NULL);
 }
