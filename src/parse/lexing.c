@@ -1,0 +1,147 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexing.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
+/*   Updated: 2025/12/20 17:47:52 by pmalumba         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static int	redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc)
+{
+	t_token	*node;
+
+	if (str[*i] != '>')
+		return (0);
+	if (str[*i + 1] == '>')
+	{
+		node = lstnew_token(gc, ">>", TOKEN_REDIR_APPEND);
+		if (!node)
+			return (0);
+		lstadd_backtok(tok, node);
+		*i += 2;
+		return (1);
+	}
+	node = lstnew_token(gc, ">", TOKEN_REDIR_OUT);
+	if (!node)
+		return (0);
+	lstadd_backtok(tok, node);
+	(*i)++;
+	return (1);
+}
+
+static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
+{
+	t_token	*node;
+
+	if (str[*i] != '<')
+		return (0);
+	if (str[*i + 1] == '<')
+	{
+		node = lstnew_token(gc, "<<", TOKEN_HEREDOC);
+		if (!node)
+			return (0);
+		lstadd_backtok(tok, node);
+		*i += 2;
+		return (1);
+	}
+	node = lstnew_token(gc, "<", TOKEN_REDIR_IN);
+	if (!node)
+		return (0);
+	lstadd_backtok(tok, node);
+	(*i)++;
+	return (1);
+}
+
+static int	tokenword(t_token **tok, char *str, int *i, t_gc *gc)
+{
+	int		start;
+	t_token	*node;
+	char	*word;
+
+	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|' || str[*i] == ' '
+		|| str[*i] == '\t')
+		return (0);
+	start = *i;
+	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '<'
+		&& str[*i] != '>' && str[*i] != '|' && str[*i] != 39)
+	{
+		(*i)++;
+	}
+	word = ft_substr(str, start, *i - start);
+	if (!word)
+		return (0);
+	node = lstnew_token(gc, word, TOKEN_WORD);
+	if (!node)
+		return (free(word), 0);
+	lstadd_backtok(tok, node);
+	free(word);
+	return (1);
+}
+
+static int	tokenpipe(t_token **tok, char *str, int *i, t_gc *gc)
+{
+	t_token	*node;
+
+	if (str[*i] == '|')
+	{
+		node = lstnew_token(gc, "|", TOKEN_PIPE);
+		if (!node)
+			return (0);
+		lstadd_backtok(tok, node);
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
+{
+	int	v;
+	int	ref;
+
+	v = 0;
+	while (str[v])
+	{
+		ref = handle_quotes(tok, str, &v, s);
+		if (ref == -1)
+			return (0);
+		if (ref == 1)
+			continue ;
+		if (redir_inxheredoc(tok, str, &v, gc))
+			continue ;
+		if (redir_outxappend(tok, str, &v, gc))
+			continue ;
+		if (tokenword(tok, str, &v, gc))
+			continue ;
+		if (tokenpipe(tok, str, &v, gc))
+			continue ;
+		v++;
+	}
+	return (1);
+}
+
+int	handle_quotes(t_token **tok, char *str, int *i, t_shell *s)
+{
+	int	ref;
+
+	ref = double_quotes(tok, str, i, s->gc);
+	if (ref == -1)
+		return (-1);
+	if (ref == 1)
+		return (1);
+	ref = single_quote(tok, str, i, s->gc);
+	if (ref == -1)
+		return (-1);
+	if (ref == 1)
+	{
+		s->tok->quote = 1;
+		return (1);
+	}
+	return (0);
+}
