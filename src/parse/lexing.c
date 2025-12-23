@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/22 19:15:29 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:07:20 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,22 +126,3 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	return (1);
 }
 
-int	handle_quotes(t_token **tok, char *str, int *i, t_shell *s)
-{
-	int	ref;
-
-	ref = double_quotes(tok, str, i, s->gc);
-	if (ref == -1)
-		return (-1);
-	if (ref == 1)
-		return (1);
-	ref = single_quote(tok, str, i, s->gc);
-	if (ref == -1)
-		return (-1);
-	if (ref == 1)
-	{
-		s->tok->quote = 1;
-		return (1);
-	}
-	return (0);
-}

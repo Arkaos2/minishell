@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:15:48 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 19:15:49 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:00:25 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ static void	run_interactive(t_shell *shell)
 			break;
 		if (*line && !is_whitespace(line))
 			add_history(line);
+		if(check_syntaxe(line) == 0)
+			continue;
 		shell->cmd = init_cmd(shell->gc);
 		if (!shell->cmd)
 			return (free(line), (void)0);

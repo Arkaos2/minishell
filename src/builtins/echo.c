@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:10:38 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/16 15:17:24 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:21:47 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	check_newline(char *flag)
 	return (1);
 }
 
-void	handle_echo(t_cmd *cmd)
+int	handle_echo(t_cmd *cmd)
 {
 	int	flag;
 	int i;
@@ -55,4 +55,5 @@ void	handle_echo(t_cmd *cmd)
 	}
 	if(flag == 0)
 		write(STDOUT_FILENO, "\n", 1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:39:04 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 15:58:26 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:21:14 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	update_env(t_envp *env, char *key, char *value, t_gc *gc)
 	env->next = new;
 }
 
-void	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
+int	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 {
 	char	*oldpwd;
 	char	*newpwd;
@@ -62,18 +62,18 @@ void	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 		path = get_env_value(env, "HOME");
 	else
 		path = cmd->args[1];
-
 	if (!path || chdir(path) != 0)
 	{
 		perror("cd");
 		free(oldpwd);
-		return;
+		return (1);
 	}
 	newpwd = getcwd(NULL, 0);
 	update_env(env, "OLDPWD", oldpwd, gc);
 	update_env(env, "PWD", newpwd, gc);
 	free(oldpwd);
 	free(newpwd);
+	return (0);
 }
 
 

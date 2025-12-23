@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:47:50 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 19:00:47 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:21:25 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_export(t_cmd *cmd)
 	return (0);
 }
 
-void	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
+int	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
 {
 	int		i;
 	char	*key;
@@ -38,6 +38,8 @@ void	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
 	char	*eq;
 
 	i = 1;
+	if (check_export(cmd))
+		return (1);
 	while (cmd->args[i])
 	{
 		eq = ft_strchr(cmd->args[i], '=');
@@ -57,5 +59,6 @@ void	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
 	}
 	if (!cmd->args[1])
 		handle_env(env, 1);
+	return (0);
 }
 

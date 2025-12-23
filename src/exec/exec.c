@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 20:15:11 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:21:41 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
 	if (cmd && cmd->args && cmd->args[0] && is_builtin(cmd->args[0]))
 	{
-		handle_builtin(cmd, shell->env, shell->gc);
-		safe_exit(shell, 0);
+		int ret = handle_builtin(cmd, shell->env, shell->gc);
+		safe_exit(shell, ret);
 	}
 	exec_child(cmd, shell);
 }

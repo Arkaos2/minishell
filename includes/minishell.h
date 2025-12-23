@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 18:55:26 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:21:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,15 +138,16 @@ int			check_redirs(t_cmd *cmd);
 void		cleanup_on_error(t_shell *shell);
 void		safe_exit(t_shell *shell, int code);
 
-int			is_builtin(char *cmd);
-void		handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc);
-void		handle_echo(t_cmd *cmd);
-void		handle_env(t_envp *env, int flag);
+int		is_builtin(char *cmd);
+int		handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc);
+int		handle_echo(t_cmd *cmd);
+int		handle_env(t_envp *env, int flag);
 void		update_env(t_envp *env, char *key, char *value, t_gc *gc);
 char		*get_env_value(t_envp *env, char *key);
-void		handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
-void		handle_pwd(t_envp *env);
-void		handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
+int		handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
+int		handle_pwd(t_envp *env);
+int		handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
+int		handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
 
 
 void		print_redirs(t_redir *r);
@@ -172,6 +173,7 @@ void		lstadd_backtok(t_token **lst, t_token *new);
 char		*dollars_conv(t_shell *s, char *name);
 int			get_var_len(char *s);
 char		*expand_dollars(t_shell *s, char *str);
+int			check_syntaxe(char *str);
 
 int			readline_check(t_envp *env);
 int			double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
