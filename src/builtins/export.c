@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:47:50 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 16:21:25 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 17:35:01 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ int	check_export(t_cmd *cmd)
 		if (!ft_isalpha(cmd->args[i][0]) && cmd->args[i][0] != '_')
 			return (ft_fprintf(2, "minishell: export: '%s': not a valid identifier\n", cmd->args[i]), 1);
 		i++;
+
+
+		 N
 	}
 	return (0);
 }

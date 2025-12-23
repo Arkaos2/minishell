@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 16:21:45 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/23 17:12:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,17 +149,16 @@ int		handle_pwd(t_envp *env);
 int		handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
 int		handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
 
-
 void		print_redirs(t_redir *r);
 
 char		**env_to_char(t_shell *shell);
 
-int			**create_pipes(int n, t_gc *gc);
-int			count_cmds(t_cmd *cmd);
+int		**create_pipes(int n, t_gc *gc);
+int		count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 void		free_pipes(int **pipes, int n);
 
-int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
+int		ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
 t_cmd		*next_cmd(t_shell *shell);
 void		free_array(char **av);
 void		ultime_filler(t_shell *s);

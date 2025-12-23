@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/22 19:12:30 by saibelab         ###   ########.fr        #
+#    Updated: 2025/12/23 17:06:31 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,8 @@ SRCS			= src/main.c \
 			src/builtins/env.c \
 			src/builtins/cd.c \
 			src/builtins/pwd.c \
-			src/builtins/export.c
+			src/builtins/export.c \
+			src/builtins/unset.c 
 
 
 
