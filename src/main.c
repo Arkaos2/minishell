@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:15:48 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 16:00:25 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/01 18:15:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,12 @@ static void	run_interactive(t_shell *shell)
 
 	while (1)
 	{
+		g_last_signal = 0;
 		line = readline("minishell: ");
 		if (!line)
 			break;
+		if (g_last_signal == 130)
+			shell->exec->last_exit = 130;
 		if (*line && !is_whitespace(line))
 			add_history(line);
 		if(check_syntaxe(line) == 0)
@@ -105,12 +108,13 @@ static void	run_interactive(t_shell *shell)
 			ultime_filler(shell);
 			run_pipes(shell);
 		}
-		if (g_last_signal)
+		if(g_last_signal)
 		{
 			shell->exec->last_exit = 128 + g_last_signal;
 			g_last_signal = 0;
 		}
 		free(line);
+		printf("%d", shell->exec->last_exit);
 	}
 }
 
@@ -132,9 +136,8 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell->env = create_envp(shell->gc, envp);
 	upgrade_env(shell);
-	setup_interactive_signals();
+	signal_distributor();
 	run_interactive(shell);
 	status = shell->exec->last_exit;
-	gc_destroy(shell->gc);
-	return (status);
+	return (gc_destroy(shell->gc), status);
 }

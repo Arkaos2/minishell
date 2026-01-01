@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 16:21:41 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/01 17:59:14 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 {
 	int	ret;
 
-	setup_child_signals();
+	exec_distributor();
 	setup_child_fds(cmd, shell, i);
 	setup_heredoc_input(shell, cmd);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
@@ -66,7 +66,6 @@ static pid_t	spawn_child(t_shell *shell, int i)
 	}
 	char *cwd = getcwd(NULL, 0);
 	free(cwd);
-
 	pid = fork();
 	if (pid < 0)
 	{
@@ -101,10 +100,14 @@ void	run_children(t_shell *shell)
 		if (pid == -1)
 			return ;
 		cmd->pid = pid;
+		sig_ignore();
 		if (pid == 0)
 			launch_children(cmd, shell, i);
 		else
+		{
 			handle_parent(shell, i);
+			signal_distributor();
+		}
 		cmd = cmd->next;
 		i++;
 	}

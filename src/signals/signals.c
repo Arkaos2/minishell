@@ -16,59 +16,52 @@ volatile sig_atomic_t	g_last_signal = 0;
 
 void	sigint_handler(int sig)
 {
+	g_last_signal = 0;
 	g_last_signal = sig;
-	write(STDOUT_FILENO, "\n", 1);
+	write(STDERR_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 void	heredoc_sigint_handler(int sig)
 {
+	g_last_signal = 0;
 	g_last_signal = sig;
-	write(STDOUT_FILENO, "\n", 1);
+	write(STDERR_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_done = 1;
 }
 
-void	setup_interactive_signals(void)
+void	signal_distributor(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sa_int.sa_handler = sigint_handler;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	setup_heredoc_signals(void)
-{
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
+// void	setup_heredoc_signals(void)
+// {
+// 	struct sigaction	sa_int;
+// 	struct sigaction	sa_quit;
 
-	sa_int.sa_handler = heredoc_sigint_handler;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+// 	sa_int.sa_handler = heredoc_sigint_handler;
+// 	sigemptyset(&sa_int.sa_mask);
+// 	sa_int.sa_flags = 0;
+// 	sigaction(SIGINT, &sa_int, NULL);
+// 	sa_quit.sa_handler = SIG_IGN;
+// 	sigemptyset(&sa_quit.sa_mask);
+// 	sa_quit.sa_flags = 0;
+// 	sigaction(SIGQUIT, &sa_quit, NULL);
+// }
+
+void	exec_distributor(void)
+{
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigint_handler);
 }
 
-void	setup_child_signals(void)
+void	sig_ignore(void)
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = SIG_DFL;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 17:12:45 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/01 17:59:41 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,10 @@ void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
 void		sigint_handler(int sig);
 void		heredoc_sigint_handler(int sig);
+void		sig_ignore(void);
+void		signal_distributor(void);
+void		exec_distributor(void);
+
 
 char		*key_finder(t_gc *gc, char *envp);
 t_envp		*create_envp(t_gc *gc, char **envp);

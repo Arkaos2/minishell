@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 16:21:36 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/01 18:05:02 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 void run_pipes(t_shell *shell)
 {
 	int		status;
+	int		sig;
 	t_cmd	*cmd;
 
 	if (!shell || !shell->exec)
@@ -101,7 +102,12 @@ void run_pipes(t_shell *shell)
 			if (WIFEXITED(status))
 				shell->exec->last_exit = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
+				sig = WTERMSIG(status);
+				if (sig == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 				shell->exec->last_exit = 128 + WTERMSIG(status);
+			}
 		}
 		cmd = cmd->next;
 	}

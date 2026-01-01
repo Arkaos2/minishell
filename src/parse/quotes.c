@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/23 16:07:26 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/01 16:49:30 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ int	check_syntaxe(char *str)
 {
 	int	len;
 
+	if(!str)
+		return 1;
 	len = ft_strlen(str) - 1;
-	while (str[len] == 32 || (str[len] >= 9 && str[len] <= 13))
+	while ((str && str[len] == 32) || (str && (str[len] >= 9 && str[len] <= 13)))
 		len--;
 	if (str[len] == '<' || str[len] == '>' || str[len] == '|')
 	{
