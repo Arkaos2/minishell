@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: automated <auto@example.com>                 +#+  +:+       +#+        */
+/*   By: automated <auto@example.com>                 +#+  +:+       +#+      */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 20:00:00 by automated         #+#    #+#             */
 /*   Updated: 2025/12/22 20:00:00 by automated        ###   ########.fr       */

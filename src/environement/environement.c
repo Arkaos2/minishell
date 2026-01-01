@@ -17,8 +17,6 @@ char	*key_finder(t_gc *gc, char *envp)
 	int		i;
 	char	*key;
 
-	(void)gc;
-
 	i = 0;
 	while (envp[i] != '=')
 		i++;
@@ -26,7 +24,7 @@ char	*key_finder(t_gc *gc, char *envp)
 	i = -1;
 	while (key[++i])
 		if (!ft_isalnum(key[i]) && key[i] != '_')
-			return (free(key), NULL);
+			return (NULL);
 	return (key);
 }
 

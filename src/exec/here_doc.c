@@ -16,6 +16,7 @@ static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 {
 	char	*line;
 	char	*content;
+	setup_heredoc_signals();
 	content = gc_strdup(shell->gc, "");
 	while (1)
 	{
@@ -31,6 +32,7 @@ static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 		content = gc_strjoin(shell->gc, content, "\n");
 		free(line);
 	}
+	setup_interactive_signals();
 	return (content);
 }
 
@@ -84,13 +86,4 @@ int	setup_heredoc_input(t_shell *shell, t_cmd *cmd)
 		r = r->next;
 	}
 	return (0);
-}
-
-void	heredoc_sigint_handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_done = 1;
 }

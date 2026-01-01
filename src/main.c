@@ -66,6 +66,7 @@ static void	run_non_interactive(char **envp)
 		if (!shell)
 			return (free(line), (void)0);
 		shell->env = create_envp(shell->gc, envp);
+		upgrade_env(shell);
 		shell->cmd = init_cmd(shell->gc);
 		shell->exec->cmd_list = shell->cmd;
 		shell->tok = NULL;
@@ -104,6 +105,11 @@ static void	run_interactive(t_shell *shell)
 			ultime_filler(shell);
 			run_pipes(shell);
 		}
+		if (g_last_signal)
+		{
+			shell->exec->last_exit = 128 + g_last_signal;
+			g_last_signal = 0;
+		}
 		free(line);
 	}
 }
@@ -111,16 +117,24 @@ static void	run_interactive(t_shell *shell)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	*shell;
+	int		status;
 
-	(void)argc;
 	(void)argv;
+	if (argc != 1)
+	{
+		write(STDERR_FILENO, "minishell: too many arguments\n", 30);
+		return (1);
+	}
 	if (!isatty(STDIN_FILENO))
 		return (run_non_interactive(envp), 0);
 	shell = init_struct();
 	if (!shell)
 		return (1);
 	shell->env = create_envp(shell->gc, envp);
+	upgrade_env(shell);
+	setup_interactive_signals();
 	run_interactive(shell);
+	status = shell->exec->last_exit;
 	gc_destroy(shell->gc);
-	return (0);
+	return (status);
 }

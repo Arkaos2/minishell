@@ -35,21 +35,21 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc)
+int	handle_builtin(t_cmd *cmd, t_shell *shell)
 {
 	if (strcmp(cmd->args[0], "echo") == 0)
 		return (handle_echo(cmd));
 	else if (strcmp(cmd->args[0], "cd") == 0)
-		return (handle_cd(cmd, env, gc));
-	// else if (strcmp(cmd->args[0], "exit") == 0)
-	//  return (handle_exit(cmd));
+		return (handle_cd(cmd, shell->env, shell->gc));
+	else if (strcmp(cmd->args[0], "exit") == 0)
+		return (handle_exit(cmd, shell));
 	else if (strcmp(cmd->args[0], "env") == 0)
-		return (handle_env(env, 0));
+		return (handle_env(shell->env, 0));
 	else if (strcmp(cmd->args[0], "export") == 0)
-		return (handle_export(cmd, env, gc));
+		return (handle_export(cmd, shell->env, shell->gc));
 	else if (strcmp(cmd->args[0], "unset") == 0)
-		return (handle_unset(cmd, env, gc));
+		return (handle_unset(cmd, shell->env, shell->gc));
 	else if (strcmp(cmd->args[0], "pwd") == 0)
-		return (handle_pwd(env));
+		return (handle_pwd(shell->env));
 	return (0);
 }

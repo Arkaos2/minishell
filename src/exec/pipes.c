@@ -79,7 +79,7 @@ void run_pipes(t_shell *shell)
 		&& shell->exec->cmd_list->args[0]
 		&& is_builtin(shell->exec->cmd_list->args[0]))
 	{
-		shell->exec->last_exit = handle_builtin(shell->exec->cmd_list, shell->env, shell->gc);
+		shell->exec->last_exit = handle_builtin(shell->exec->cmd_list, shell);
 		return ;
 	}
 	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc);
@@ -94,7 +94,6 @@ void run_pipes(t_shell *shell)
 	run_children(shell);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
 	cmd = shell->exec->cmd_list;
-	shell->exec->last_exit = 0;
 	while (cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) > 0)

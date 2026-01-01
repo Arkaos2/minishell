@@ -90,7 +90,7 @@ t_cmd	*next_cmd(t_shell *shell)
 	cmd = gc_calloc(shell->gc, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100);
+	cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100000);
 	if (!cmd->args)
 		return (NULL);
 	return (cmd);

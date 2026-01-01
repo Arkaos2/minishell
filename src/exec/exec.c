@@ -26,24 +26,27 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 	if (!path)
 	{
 		ft_fprintf(2, "%s: command not found\n", cmd->args[0]);
-		safe_exit(shell, 127);
+		safe_exit(shell->gc, 127);
 	}
 	if (execve(path, cmd->args, envp) == -1)
 	{
 		perror(cmd->args[0]);
-		safe_exit(shell, 127);
+		safe_exit(shell->gc, 127);
 	}
 }
 
 static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 {
+	int	ret;
+
+	setup_child_signals();
 	setup_child_fds(cmd, shell, i);
 	setup_heredoc_input(shell, cmd);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
 	if (cmd && cmd->args && cmd->args[0] && is_builtin(cmd->args[0]))
 	{
-		int ret = handle_builtin(cmd, shell->env, shell->gc);
-		safe_exit(shell, ret);
+		ret = handle_builtin(cmd, shell);
+		safe_exit(shell->gc, ret);
 	}
 	exec_child(cmd, shell);
 }

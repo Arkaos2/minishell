@@ -14,13 +14,13 @@
 
 void	cleanup_on_error(t_shell *shell)
 {
-	safe_exit(shell, 1);
+	safe_exit(shell->gc, 1);
 }
 
-void	safe_exit(t_shell *shell, int code)
+void	safe_exit(t_gc *gc, int code)
 {
-	if (shell && shell->gc)
-		gc_destroy(shell->gc);
+	if (gc)
+		gc_destroy(gc);
 	exit(code);
 }
 

@@ -17,17 +17,17 @@ LDFLAGS			= -lreadline
 
 SRCS			= src/main.c \
 			src/gc.c \
+			src/gc_utils.c \
 			src/environement/environement.c \
 			src/exec/check_path.c \
-			src/exec/fill_env.c \
+			src/environement/fill_env.c \
 			src/exec/exec.c \
 			src/exec/pipes.c \
 			src/exec/free.c \
 			src/exec/redirection.c \
 			src/exec/here_doc.c \
 			src/parse/list.c \
-			src/parse/outils.c \
-				src/parse/expand_dollars.c \
+			src/parse/expand_dollars.c \
 			src/parse/redirs.c \
 			src/parse/quotes.c \
 			src/parse/lexing.c \
@@ -37,9 +37,10 @@ SRCS			= src/main.c \
 			src/builtins/cd.c \
 			src/builtins/pwd.c \
 			src/builtins/export.c \
-			src/builtins/unset.c 
-
-
+			src/builtins/unset.c \
+			src/builtins/exit.c \
+			src/environement/update_env.c \
+			src/signals/signals.c
 
 OBJS			= $(SRCS:.c=.o)
 

@@ -12,22 +12,6 @@
 
 #include "minishell.h"
 
-void	print_redirs(t_redir *r)
-{
-	while (r)
-	{
-		if (r->type == R_IN)
-			ft_fprintf(1, "[R_IN]  %s\n", r->file);
-		else if (r->type == R_OUT)
-			ft_fprintf(1, "[R_OUT] %s\n", r->file);
-		else if (r->type == R_APPEND)
-			ft_fprintf(1, "[R_AP]  %s\n", r->file);
-		else if (r->type == R_HEREDOC)
-			ft_fprintf(1, "[HERED] %s\n", r->file ? r->file : "(heredoc)");
-		r = r->next;
-	}
-}
-
 static void	open_input_redirections(t_redir *redir)
 {
 	int	fd;

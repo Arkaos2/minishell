@@ -24,6 +24,8 @@
 # include "ft_fprintf/ft_fprintf.h"
 # include "sys/wait.h"
 
+extern volatile sig_atomic_t	g_last_signal;
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -103,10 +105,8 @@ typedef struct s_shell
 	int		status;
 }			t_shell;
 
-
 void		fill_all_heredocs(t_shell *shell);
 int			setup_heredoc_input(t_shell *shell, t_cmd *cmd);
-void		heredoc_sigint_handler(int sig);
 
 void		free_cmds(t_cmd *cmd);
 void		free_envp(t_envp *env);
@@ -119,6 +119,13 @@ char		*gc_strdup(t_gc *gc, const char *s);
 t_gcnode	*new_node(void *ptr);
 char		*gc_strndup(t_gc *gc, const char *s, int n);
 char		*gc_strjoin(t_gc *gc, const char *s1, const char *s2);
+char		*gc_itoa(t_shell *shell, int n);
+
+void		setup_interactive_signals(void);
+void		setup_child_signals(void);
+void		setup_heredoc_signals(void);
+void		sigint_handler(int sig);
+void		heredoc_sigint_handler(int sig);
 
 char		*key_finder(t_gc *gc, char *envp);
 t_envp		*create_envp(t_gc *gc, char **envp);
@@ -136,33 +143,35 @@ void		exec_child(t_cmd *cmd, t_shell *shell);
 void		setup_child_fds(t_cmd *cmd, t_shell *shell, int i);
 int			check_redirs(t_cmd *cmd);
 void		cleanup_on_error(t_shell *shell);
-void		safe_exit(t_shell *shell, int code);
+void		safe_exit(t_gc *gc, int code);
 
-int		is_builtin(char *cmd);
-int		handle_builtin(t_cmd *cmd, t_envp *env, t_gc *gc);
-int		handle_echo(t_cmd *cmd);
-int		handle_env(t_envp *env, int flag);
+int			is_builtin(char *cmd);
+int			handle_builtin(t_cmd *cmd, t_shell *shell);
+int			handle_echo(t_cmd *cmd);
+int			handle_env(t_envp *env, int flag);
 void		update_env(t_envp *env, char *key, char *value, t_gc *gc);
 char		*get_env_value(t_envp *env, char *key);
-int		handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
-int		handle_pwd(t_envp *env);
-int		handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
-int		handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
+int			upgrade_env(t_shell *shell);
+void		add_env_var(t_shell *shell, char *key, char *value);
+int			handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
+int			handle_pwd(t_envp *env);
+int			handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
+int			handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
+int			handle_exit(t_cmd *cmd, t_shell *shell);
 
 void		print_redirs(t_redir *r);
 
 char		**env_to_char(t_shell *shell);
 
-int		**create_pipes(int n, t_gc *gc);
-int		count_cmds(t_cmd *cmd);
+int			**create_pipes(int n, t_gc *gc);
+int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 void		free_pipes(int **pipes, int n);
 
-int		ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
+int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
 t_cmd		*next_cmd(t_shell *shell);
-void		free_array(char **av);
-void		ultime_filler(t_shell *s);
 
+void		ultime_filler(t_shell *s);
 
 t_token		*lstnew_token(t_gc *gc, char *value, t_token_type type);
 t_redir		*lstnew_redir(t_gc *gc, char *value, t_redir_type type);
@@ -174,7 +183,6 @@ int			get_var_len(char *s);
 char		*expand_dollars(t_shell *s, char *str);
 int			check_syntaxe(char *str);
 
-int			readline_check(t_envp *env);
 int			double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
 int			single_quote(t_token **tok, char *str, int *i, t_gc *gc);
 int			handle_quotes(t_token **tok, char *str, int *i, t_shell *s);

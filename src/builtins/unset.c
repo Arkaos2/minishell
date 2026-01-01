@@ -12,9 +12,7 @@
 
 #include "minishell.h"
 
-/* return the previous node for the node matching key, or NULL if the
-   head matches or not found */
-static t_envp *get_prev_for_key(t_envp *env, const char *key)
+static t_envp *get_prev_for_key(t_envp *env, char *key)
 {
 	t_envp *prev;
 	t_envp *cur;
@@ -25,7 +23,7 @@ static t_envp *get_prev_for_key(t_envp *env, const char *key)
 	cur = env;
 	while (cur)
 	{
-		if (ft_strcmp(cur->key, (char *)key) == 0)
+		if (ft_strcmp(cur->key, key) == 0)
 			return (prev);
 		prev = cur;
 		cur = cur->next;
@@ -33,7 +31,7 @@ static t_envp *get_prev_for_key(t_envp *env, const char *key)
 	return (NULL);
 }
 
-static int remove_env_key(t_envp *env, const char *key)
+static int remove_env_key(t_envp *env, char *key)
 {
 	t_envp *prev;
 	t_envp *cur;
@@ -49,7 +47,7 @@ static int remove_env_key(t_envp *env, const char *key)
 		return (1);
 	}
 	cur = env;
-	if (cur && ft_strcmp(cur->key, (char *)key) == 0)
+	if (cur && ft_strcmp(cur->key, key) == 0)
 	{
 		if (cur->next)
 		{

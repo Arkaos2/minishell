@@ -22,7 +22,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
-#
+# include <stdarg.h>
 
 typedef struct s_gc t_gc;
 
