@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 17:31:10 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/31 18:26:16 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,45 @@ int	single_quote(t_token **tok, char *str, int *i, t_gc *gc)
 	if (str[*i] == '\'')
 		(*i)++;
 	return (1);
+}
+
+int	check_syntaxe(char *str)
+{
+	int	len;
+
+	if (!str)
+		return (0);
+	len = ft_strlen(str) - 1;
+	while (len >= 0 && (str[len] == ' ' || (str[len] >= 9 && str[len] <= 13)))
+		len--;
+	if (len < 0)
+		return (1);
+	if (str[len] == '<' || str[len] == '>' || str[len] == '|')
+	{
+		free(str);
+		ft_fprintf(2,
+			"bash: syntax error near unexpected token `newline'\n");
+		return (0);
+	}
+	return (1);
+}
+
+int	handle_quotes(t_token **tok, char *str, int *i, t_shell *s)
+{
+	int	ref;
+
+	ref = double_quotes(tok, str, i, s->gc_tmp);
+	if (ref == -1)
+		return (-1);
+	if (ref == 1)
+		return (1);
+	ref = single_quote(tok, str, i, s->gc_tmp);
+	if (ref == -1)
+		return (-1);
+	if (ref == 1)
+	{
+		s->tok->quote = 1;
+		return (1);
+	}
+	return (0);
 }

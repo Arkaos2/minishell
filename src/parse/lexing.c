@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 17:47:52 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/31 18:43:15 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	int	ref;
 
 	v = 0;
+	if (!str)
+		return (0);
 	while (str[v])
 	{
 		ref = handle_quotes(tok, str, &v, s);
@@ -126,22 +128,3 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	return (1);
 }
 
-int	handle_quotes(t_token **tok, char *str, int *i, t_shell *s)
-{
-	int	ref;
-
-	ref = double_quotes(tok, str, i, s->gc);
-	if (ref == -1)
-		return (-1);
-	if (ref == 1)
-		return (1);
-	ref = single_quote(tok, str, i, s->gc);
-	if (ref == -1)
-		return (-1);
-	if (ref == 1)
-	{
-		s->tok->quote = 1;
-		return (1);
-	}
-	return (0);
-}

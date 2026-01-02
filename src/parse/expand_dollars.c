@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   expand_dollars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: automated <auto@example.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 16:09:30 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 19:15:39 by pmalumba         ###   ########.fr       */
+/*   Created: 2025/12/22 20:00:00 by automated         #+#    #+#             */
+/*   Updated: 2025/12/22 20:00:00 by automated        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,24 @@
 
 char	*dollars_conv(t_shell *s, char *name)
 {
-	int		i;
+    t_envp  *tmp;
 	char	*res;
 	size_t	len;
 
 	len = ft_strlen(name);
-	i = 0;
-	while (s->envp[i])
+    tmp = s->env;
+	while (tmp)
 	{
-		if (!ft_strncmp(s->envp[i], name, len) && s->envp[i][len] == '=')
+		if (!ft_strncmp(tmp->key, name, len))
 		{
-			res = gc_strdup(s->gc, s->envp[i] + len + 1);
+			res = gc_strdup(s->gc_tmp, tmp->value);
 			if (!res)
 				return (NULL);
 			return (res);
 		}
-		i++;
+		tmp = tmp->next;
 	}
-	res = gc_strdup(s->gc, "");
+	res = gc_strdup(s->gc_tmp, "");
 	if (!res)
 		return (NULL);
 	return (res);
@@ -58,8 +58,10 @@ char	*expand_dollars(t_shell *s, char *str)
 	char	*value;
 	char	tmp[2];
 
+	if (!str)
+		return (NULL);
 	i = 0;
-	result = gc_strdup(s->gc, "");
+	result = gc_strdup(s->gc_tmp, "");
 	if (!result)
 		return (NULL);
 	while (str[i])
@@ -71,7 +73,7 @@ char	*expand_dollars(t_shell *s, char *str)
 				value = ft_itoa(s->status);
 				if (!value)
 					return (NULL);
-				result = gc_strjoin(s->gc, result, value);
+				result = gc_strjoin(s->gc_tmp, result, value);
 				if (!result)
 					return (free(value), NULL);
 				i += 2;
@@ -79,25 +81,25 @@ char	*expand_dollars(t_shell *s, char *str)
 			}
 			i++;
 			len = get_var_len(&str[i]);
-			name = ft_substr(str, i, len);
+			name = gc_substr(s->gc_tmp, str, i, len);
 			if (!name)
 				return (NULL);
 			value = dollars_conv(s, name);
 			if (!value)
 			{
-				free(name);
+                // return (NULL);
 				value = "";
 			}
-			result = gc_strjoin(s->gc, result, value);
+			result = gc_strjoin(s->gc_tmp, result, value);
 			if (!result)
-				return (free(name), NULL);
+				return (NULL);
 			i += len;
 		}
 		else
 		{
 			tmp[0] = str[i];
 			tmp[1] = '\0';
-			result = gc_strjoin(s->gc, result, tmp);
+			result = gc_strjoin(s->gc_tmp, result, tmp);
 			if (!result)
 				return (NULL);
 			i++;

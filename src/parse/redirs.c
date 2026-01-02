@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 17:30:16 by pmalumba         ###   ########.fr       */
+/*   Updated: 2025/12/31 19:21:36 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd, int *i)
 
 	if (!tok || tok->type != TOKEN_WORD)
 		return (0);
-	if (tok->quote == 1)
+	if (shell->tok->quote == 1)
 	{
-		res = gc_strdup(shell->gc, tok->value);
+		res = gc_strdup(shell->gc_tmp, tok->value);
 		if (!res)
 			return (0);
 	}
@@ -34,6 +34,7 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd, int *i)
 	if (!cmd->args[*i])
 		return (0);
 	(*i)++;
+	// printf("DEBUG: writing at index %d\n", *i);
 	return (1);
 }
 
@@ -42,10 +43,10 @@ static t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 	t_redir	*node;
 	char	*res;
 
-	node = gc_calloc(shell->gc, sizeof(t_redir));
+	node = gc_calloc(shell->gc_tmp, sizeof(t_redir));
 	if (!node)
 		return (NULL);
-	res = gc_strdup(shell->gc, tok->next->value);
+	res = gc_strdup(shell->gc_tmp, tok->next->value);
 	if (!res)
 		return (NULL);
 	node->file = res;
@@ -86,13 +87,18 @@ static int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
 t_cmd	*next_cmd(t_shell *shell)
 {
 	t_cmd	*cmd;
+	size_t	v;
 
-	cmd = gc_calloc(shell->gc, sizeof(t_cmd));
+	cmd = gc_calloc(shell->gc_tmp, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100);
+	v = sizeof_arg(shell);
+	if (v == 0)
+		v = 1;
+	cmd->args = gc_calloc(shell->gc_tmp, sizeof(char *) * (v + 2));
 	if (!cmd->args)
 		return (NULL);
+	printf("DEBUG: malloc args size = %zu\n", v + 1);
 	return (cmd);
 }
 
@@ -109,6 +115,7 @@ void	ultime_filler(t_shell *s)
 	{
 		if (tok->type == TOKEN_PIPE)
 		{
+			cmd->args[v] = NULL;
 			cmd->next = next_cmd(s);
 			if (!cmd->next)
 			{
@@ -136,4 +143,6 @@ void	ultime_filler(t_shell *s)
 		}
 		tok = tok->next;
 	}
+	if (cmd)
+        cmd->args[v] = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 14:39:34 by saibelab          #+#    #+#             */
-/*   Updated: 2025/09/23 15:25:29 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:02:48 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*append(char *stock, char *buf)
 		return (NULL);
 	if (stock)
 		len_stock = ft_strlen(stock);
-	new_stock = malloc(sizeof(char) * (ft_strlen(buf) + len_stock + 1));
+	new_stock = ft_calloc((ft_strlen(buf) + len_stock + 1), sizeof(char));
 	if (!new_stock)
 		return (NULL);
 	new_stock = create_new_stock(stock, new_stock, buf);

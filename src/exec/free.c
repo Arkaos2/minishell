@@ -1,39 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 15:23:18 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 14:59:46 by saibelab         ###   ########.fr       */
+/*   Created: 2025/12/02 16:54:33 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/17 15:59:11 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+void	cleanup_on_error(t_shell *shell)
 {
-	size_t	i;
-	size_t	j;
-	size_t	len;
-	char	*s3;
+	safe_exit(shell, 1);
+}
 
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+void	safe_exit(t_shell *shell, int code)
+{
+	if (shell && shell->gc)
+		gc_destroy(shell->gc);
+	exit(code);
+}
+
+void	close_all_pipes(int **pipes, int nb_cmd)
+{
+	int i;
+
+	if (!pipes)
+		return ;
 	i = 0;
-	j = 0;
-	s3 = ft_calloc(len, sizeof(char));
-	if (!s3)
-		return (NULL);
-	while (s1[i] != '\0')
+	while (i < nb_cmd - 1 && i < 2)
 	{
-		s3[i] = s1[i];
+		if (pipes[i][0] >= 0)
+			close(pipes[i][0]);
+		if (pipes[i][1] >= 0)
+			close(pipes[i][1]);
 		i++;
 	}
-	while (s2[j] != '\0')
-		s3[i++] = s2[j++];
-	s3[i] = '\0';
-	return (s3);
 }
+
