@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/01 17:59:41 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/02 17:08:38 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,8 @@ typedef struct s_shell
 	int		status;
 }			t_shell;
 
-void		fill_all_heredocs(t_shell *shell);
+int			fill_all_heredocs(t_shell *shell);
 int			setup_heredoc_input(t_shell *shell, t_cmd *cmd);
-
-void		free_cmds(t_cmd *cmd);
-void		free_envp(t_envp *env);
-void		free_exec(t_shell *shell);
 
 t_gc		*gc_new(void);
 void		*gc_calloc(t_gc *gc, size_t size);
@@ -121,22 +117,19 @@ char		*gc_strndup(t_gc *gc, const char *s, int n);
 char		*gc_strjoin(t_gc *gc, const char *s1, const char *s2);
 char		*gc_itoa(t_shell *shell, int n);
 
-void		setup_interactive_signals(void);
-void		setup_child_signals(void);
-void		setup_heredoc_signals(void);
+
 void		sigint_handler(int sig);
 void		heredoc_sigint_handler(int sig);
 void		sig_ignore(void);
 void		signal_distributor(void);
 void		exec_distributor(void);
-
+void		heredoc_signal_distributor(void);
 
 char		*key_finder(t_gc *gc, char *envp);
 t_envp		*create_envp(t_gc *gc, char **envp);
 t_envp		*check_node(t_gc *gc, char *envp);
 
 int			is_whitespace(char *s);
-int			readline_check(t_envp *env);
 
 char		*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int			is_absolute_path(char *cmd);
@@ -163,14 +156,11 @@ int			handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
 int			handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
 int			handle_exit(t_cmd *cmd, t_shell *shell);
 
-void		print_redirs(t_redir *r);
-
 char		**env_to_char(t_shell *shell);
 
 int			**create_pipes(int n, t_gc *gc);
 int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
-void		free_pipes(int **pipes, int n);
 
 int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
 t_cmd		*next_cmd(t_shell *shell);
@@ -183,7 +173,6 @@ void		lstadd_backredir(t_redir **lst, t_redir *new);
 void		lstadd_backtok(t_token **lst, t_token *new);
 
 char		*dollars_conv(t_shell *s, char *name);
-int			get_var_len(char *s);
 char		*expand_dollars(t_shell *s, char *str);
 int			check_syntaxe(char *str);
 
