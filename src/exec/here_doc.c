@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/02 17:01:09 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 20:22:39 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@ static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 	content = gc_strdup(shell->gc, "");
 	while (1)
 	{
-		line = readline("heredoc> ");
+		line = readline("> ");
 		if (g_last_signal == SIGINT)
 		{
 			free(line);
-			signal_distributor();
-			return (NULL);
+			return (signal_distributor(), NULL);
 		}
 		if (!line)
 			break ;
@@ -39,8 +38,7 @@ static char	*read_heredoc_content(t_shell *shell, char *delimiter)
 		content = gc_strjoin(shell->gc, content, "\n");
 		free(line);
 	}
-	signal_distributor();
-	return (content);
+	return (signal_distributor(), content);
 }
 
 static int	fill_cmd_heredocs(t_shell *shell, t_cmd *cmd)

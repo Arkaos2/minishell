@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:53:08 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/02 17:13:20 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 20:23:19 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,11 @@ static char	**fill_envp(t_shell *shell, int size)
 			envp[i] = gc_strjoin(shell->gc, tmp2, tmp->value);
 			if (!envp[i])
 				return (NULL);
-
 			i++;
 		}
 		tmp = tmp->next;
 	}
-	envp[i] = NULL;
-	return (envp);
+	return (envp[i] = NULL, envp);
 }
 
 char	**env_to_char(t_shell *shell)

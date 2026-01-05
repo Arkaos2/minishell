@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 18:42:58 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 20:43:34 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ typedef struct s_shell
 	t_cmd	*cmd;
 	t_gc	*gc;
 	t_gc	*gc_tmp;
-	int		status;
 }			t_shell;
 
 int			fill_all_heredocs(t_shell *shell);
@@ -146,14 +145,14 @@ void		safe_exit(t_shell *s, int code);
 int			is_builtin(char *cmd);
 int			handle_builtin(t_cmd *cmd, t_shell *shell);
 int			handle_echo(t_cmd *cmd);
-int			handle_env(t_envp *env, int flag);
+int			handle_env(t_shell *s, int flag);
 void		update_env(t_envp *env, char *key, char *value, t_gc *gc);
 char		*get_env_value(t_envp *env, char *key);
 int			upgrade_env(t_shell *shell);
 void		add_env_var(t_shell *shell, char *key, char *value);
 int			handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
 int			handle_pwd(t_envp *env);
-int			handle_export(t_cmd *cmd, t_envp *env, t_gc *gc);
+int			handle_export(t_cmd *cmd, t_shell *s, t_gc *gc);
 int			handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
 int			handle_exit(t_cmd *cmd, t_shell *shell);
 

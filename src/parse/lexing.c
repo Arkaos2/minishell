@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/05 19:39:23 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 20:12:32 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	tokenword(t_token **tok, char *str, int *i, t_gc *gc)
 		return (0);
 	start = *i;
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '<'
-		&& str[*i] != '>' && str[*i] != '|' && str[*i] != 39)
+		&& str[*i] != '>' && str[*i] != '|')
 	{
 		(*i)++;
 	}

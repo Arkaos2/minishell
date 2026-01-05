@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: automated <auto@example.com>                 +#+  +:+      
+/*   By: automated <auto@example.com>                 +#+  +:+
 	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 20:00:00 by automated         #+#    #+#             */
@@ -55,7 +55,7 @@ static char	*handle_status(t_shell *s, char *result, int *i)
 	char	*val;
 	char	*new_res;
 
-	val = ft_itoa(s->status);
+	val = ft_itoa(s->exec->last_exit);
 	if (!val)
 		return (NULL);
 	new_res = gc_strjoin(s->gc_tmp, result, val);

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:15:48 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 18:51:09 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 20:03:02 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static void	run_non_interactive(char **envp)
 static void	run_interactive(t_shell *shell)
 {
 	char	*line;
+	int ret;
 
 	while (1)
 	{
@@ -104,9 +105,13 @@ static void	run_interactive(t_shell *shell)
 			shell->exec->last_exit = 130;
 		if (*line && !is_whitespace(line))
 			add_history(line);
-		if(check_syntaxe(line) == 0)
-		// add le exit code 2
+		ret = check_syntaxe(line);
+		if (ret != 1)
+		{
+			if (ret == 2)
+				shell->exec->last_exit = 2;
 			continue;
+		}
 		shell->gc_tmp = gc_new();
 		shell->cmd = init_cmd(shell);
 		if (!shell->cmd)

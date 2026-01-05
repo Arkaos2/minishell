@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/05 17:14:47 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:43:53 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	check_syntaxe(char *str)
 	{
 		free(str);
 		ft_fprintf(2, "bash: syntax error near unexpected token `newline'\n");
-		return (0);
+		return (2);
 	}
 	return (1);
 }
