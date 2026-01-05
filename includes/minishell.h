@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/02 17:08:38 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 18:42:58 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_shell
 	t_envp	*env;
 	t_cmd	*cmd;
 	t_gc	*gc;
+	t_gc	*gc_tmp;
 	int		status;
 }			t_shell;
 
@@ -116,7 +117,7 @@ t_gcnode	*new_node(void *ptr);
 char		*gc_strndup(t_gc *gc, const char *s, int n);
 char		*gc_strjoin(t_gc *gc, const char *s1, const char *s2);
 char		*gc_itoa(t_shell *shell, int n);
-
+char		*gc_substr(t_gc *gc, char const *s, unsigned int start, size_t len);
 
 void		sigint_handler(int sig);
 void		heredoc_sigint_handler(int sig);
@@ -140,7 +141,7 @@ void		exec_child(t_cmd *cmd, t_shell *shell);
 void		setup_child_fds(t_cmd *cmd, t_shell *shell, int i);
 int			check_redirs(t_cmd *cmd);
 void		cleanup_on_error(t_shell *shell);
-void		safe_exit(t_gc *gc, int code);
+void		safe_exit(t_shell *s, int code);
 
 int			is_builtin(char *cmd);
 int			handle_builtin(t_cmd *cmd, t_shell *shell);
@@ -163,21 +164,24 @@ int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 
 int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
-t_cmd		*next_cmd(t_shell *shell);
 
-void		ultime_filler(t_shell *s);
+int			ultime_filler(t_shell *s);
 
 t_token		*lstnew_token(t_gc *gc, char *value, t_token_type type);
 t_redir		*lstnew_redir(t_gc *gc, char *value, t_redir_type type);
 void		lstadd_backredir(t_redir **lst, t_redir *new);
 void		lstadd_backtok(t_token **lst, t_token *new);
 
-char		*dollars_conv(t_shell *s, char *name);
 char		*expand_dollars(t_shell *s, char *str);
 int			check_syntaxe(char *str);
+void		reset_element(t_shell *shell);
+char		**fill_array(t_shell *shell, char **old_array, char *new);
+t_cmd		*init_cmd(t_shell *shell);
 
 int			double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
 int			single_quote(t_token **tok, char *str, int *i, t_gc *gc);
 int			handle_quotes(t_token **tok, char *str, int *i, t_shell *s);
+t_cmd		*handle_pipe(t_shell *s, t_cmd *cmd);
+
 
 #endif

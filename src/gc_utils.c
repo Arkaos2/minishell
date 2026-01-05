@@ -83,3 +83,29 @@ char	*gc_itoa(t_shell *shell, int n)
 	free(str);
 	return (result);
 }
+
+char	*gc_substr(t_gc *gc, char const *s, unsigned int start, size_t len)
+{
+	char	*s2;
+	size_t	s_len;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (gc_strdup(gc, ""));
+	if (len > s_len - start)
+		len = s_len - start;
+	s2 = (char *)gc_calloc(gc, sizeof(char) * s_len);
+	if (!s2)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		s2[i] = s[start + i];
+		i++;
+	}
+	s2[i] = '\0';
+	return (s2);
+}

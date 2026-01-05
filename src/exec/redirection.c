@@ -6,13 +6,13 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:08:15 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/10 19:57:48 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:10:20 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	open_input_redirections(t_redir *redir)
+static void	open_input_redirections(t_redir *redir, t_shell *s)
 {
 	int	fd;
 
@@ -24,7 +24,7 @@ static void	open_input_redirections(t_redir *redir)
 			if (fd < 0)
 			{
 				perror(redir->file);
-				safe_exit(NULL, 127);
+				safe_exit(s, 127);
 			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
@@ -33,10 +33,13 @@ static void	open_input_redirections(t_redir *redir)
 	}
 }
 
-static void	open_output_redirections(t_redir *redir)
+static void	open_output_redirections(t_redir *redir, t_shell *s)
 {
 	int	fd;
 
+	t_token *tok;
+
+	tok = s->tok;
 	while (redir)
 	{
 		if (redir->type == R_OUT)
@@ -51,7 +54,7 @@ static void	open_output_redirections(t_redir *redir)
 		if (fd < 0)
 		{
 			perror(redir->file);
-			safe_exit(NULL, 1);
+			safe_exit(s, 1);
 		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
@@ -59,10 +62,10 @@ static void	open_output_redirections(t_redir *redir)
 	}
 }
 
-static void	open_redirections(t_cmd *cmd)
+static void	open_redirections(t_cmd *cmd, t_shell *s)
 {
-	open_input_redirections(cmd->redirs);
-	open_output_redirections(cmd->redirs);
+	open_input_redirections(cmd->redirs, s);
+	open_output_redirections(cmd->redirs, s);
 }
 
 void	setup_child_fds(t_cmd *cmd, t_shell *shell, int i)
@@ -71,7 +74,7 @@ void	setup_child_fds(t_cmd *cmd, t_shell *shell, int i)
 		dup2(shell->exec->pipes[(i - 1) % 2][0], STDIN_FILENO);
 	if (i < shell->exec->nb_cmd - 1)
 		dup2(shell->exec->pipes[i % 2][1], STDOUT_FILENO);
-	open_redirections(cmd);
+	open_redirections(cmd, shell);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
 }
 

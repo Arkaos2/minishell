@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/01 17:59:14 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 17:46:52 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 	if (!path)
 	{
 		ft_fprintf(2, "%s: command not found\n", cmd->args[0]);
-		safe_exit(shell->gc, 127);
+		safe_exit(shell, 127);
 	}
 	if (execve(path, cmd->args, envp) == -1)
 	{
 		perror(cmd->args[0]);
-		safe_exit(shell->gc, 127);
+		safe_exit(shell, 127);
 	}
 }
 
@@ -46,7 +46,7 @@ static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 	if (cmd && cmd->args && cmd->args[0] && is_builtin(cmd->args[0]))
 	{
 		ret = handle_builtin(cmd, shell);
-		safe_exit(shell->gc, ret);
+		safe_exit(shell, ret);
 	}
 	exec_child(cmd, shell);
 }

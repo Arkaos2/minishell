@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/20 17:30:16 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/05 18:41:10 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd, int *i)
+static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 {
 	char	*res;
 
 	if (!tok || tok->type != TOKEN_WORD)
 		return (0);
-	if (tok->quote == 1)
+	if (shell->tok->quote == 1)
 	{
 		res = gc_strdup(shell->gc, tok->value);
 		if (!res)
@@ -30,14 +30,13 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd, int *i)
 		if (!res)
 			return (0);
 	}
-	cmd->args[(*i)] = res;
-	if (!cmd->args[*i])
+	cmd->args = fill_array(shell, cmd->args, res);
+	if (!cmd->args)
 		return (0);
-	(*i)++;
 	return (1);
 }
 
-static t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
+t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 {
 	t_redir	*node;
 	char	*res;
@@ -63,7 +62,7 @@ static t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 	return (node);
 }
 
-static int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
+int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
 {
 	t_redir	*node;
 
@@ -83,57 +82,38 @@ static int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
 	return (0);
 }
 
-t_cmd	*next_cmd(t_shell *shell)
+static void next_fill_redirs(t_token **tok)
 {
-	t_cmd	*cmd;
-
-	cmd = gc_calloc(shell->gc, sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->args = gc_calloc(shell->gc, sizeof(char *) * 100000);
-	if (!cmd->args)
-		return (NULL);
-	return (cmd);
+	if ((*tok)->next)
+		*tok = (*tok)->next->next;
+	else
+		*tok = NULL;
 }
 
-void	ultime_filler(t_shell *s)
+int	ultime_filler(t_shell *s)
 {
 	t_cmd	*cmd;
-	int		v;
 	t_token	*tok;
 
-	v = 0;
 	cmd = s->cmd;
 	tok = s->tok;
 	while (tok)
 	{
 		if (tok->type == TOKEN_PIPE)
 		{
-			cmd->next = next_cmd(s);
-			if (!cmd->next)
-			{
-				gc_destroy(s->gc);
-				perror("minishell:");
-				exit(1);
-			}
-			cmd = cmd->next;
-			v = 0;
+			cmd = handle_pipe(s, cmd);
+			if (!cmd)
+				return (0);
 			tok = tok->next;
-			continue ;
 		}
-		if (fill_redirs(tok, s, cmd))
+		else if (fill_redirs(tok, s, cmd))
 		{
-			if (tok && tok->next)
-				tok = tok->next->next;
-			else
-				tok = NULL;
-			continue ;
+			next_fill_redirs(&tok);
 		}
-		if (fill_args(tok, s, cmd, &v))
-		{
+		else if (fill_args(tok, s, cmd))
 			tok = tok->next;
-			continue ;
-		}
-		tok = tok->next;
+		else
+			tok = tok->next;
 	}
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/23 16:07:20 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/02 20:01:02 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	int	ref;
 
 	v = 0;
+	if (!str)
+		return (0);
 	while (str[v])
 	{
 		ref = handle_quotes(tok, str, &v, s);
@@ -125,4 +127,3 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	}
 	return (1);
 }
-

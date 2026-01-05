@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:18 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/01 16:49:30 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 17:14:47 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,17 @@ int	check_syntaxe(char *str)
 {
 	int	len;
 
-	if(!str)
-		return 1;
+	if (!str)
+		return (0);
 	len = ft_strlen(str) - 1;
-	while ((str && str[len] == 32) || (str && (str[len] >= 9 && str[len] <= 13)))
+	while (len >= 0 && (str[len] == ' ' || (str[len] >= 9 && str[len] <= 13)))
 		len--;
+	if (len < 0)
+		return (1);
 	if (str[len] == '<' || str[len] == '>' || str[len] == '|')
 	{
 		free(str);
-		ft_fprintf(2,
-			"minishell: syntax error near unexpected token `newline'\n");
+		ft_fprintf(2, "bash: syntax error near unexpected token `newline'\n");
 		return (0);
 	}
 	return (1);

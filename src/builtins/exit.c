@@ -21,7 +21,7 @@ int	handle_exit(t_cmd *cmd, t_shell *shell)
 	if (!cmd->args[1])
 	{
 		write(STDOUT_FILENO, "exit\n", 5);
-		safe_exit(shell->gc, shell->exec->last_exit);
+		safe_exit(shell, shell->exec->last_exit);
 	}
 	else if (cmd->args[2])
 		return (write(STDERR_FILENO, "exit: too many arguments\n", 25), 1);
@@ -31,12 +31,12 @@ int	handle_exit(t_cmd *cmd, t_shell *shell)
 		{
 			write(STDERR_FILENO, "exit: numeric argument required\n", 32);
 			write(STDOUT_FILENO, "exit\n", 5);
-			safe_exit(shell->gc,2);
+			safe_exit(shell, 2);
 		}
 		i++;
 	}
 	exit_code = ft_atoi(cmd->args[1]);
 	write(STDOUT_FILENO, "exit\n", 5);
-	safe_exit(shell->gc, exit_code);
+	safe_exit(shell, exit_code);
 	return (0);
 }

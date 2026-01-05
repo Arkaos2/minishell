@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2025/12/23 17:06:31 by saibelab         ###   ########.fr        #
+#    Updated: 2026/01/05 18:43:31 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,9 @@ SRCS			= src/main.c \
 			src/builtins/unset.c \
 			src/builtins/exit.c \
 			src/environement/update_env.c \
-			src/signals/signals.c
+			src/signals/signals.c \
+			src/parse/extra_redirs.c \
+			src/parse/outils.c
 
 OBJS			= $(SRCS:.c=.o)
 

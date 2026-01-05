@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:15:48 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/01 18:15:45 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 18:51:09 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,12 @@ static t_shell	*init_struct(void)
 	return (shell);
 }
 
-static t_cmd	*init_cmd(t_gc *gc)
+t_cmd	*init_cmd(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	cmd = gc_calloc(gc, sizeof(t_cmd));
+	cmd = gc_calloc(shell->gc_tmp, sizeof(t_cmd));
 	if (!cmd)
-		return (NULL);
-	cmd->args = gc_calloc(gc, sizeof(char *) * 100);
-	if (!cmd->args)
 		return (NULL);
 	return (cmd);
 }
@@ -65,17 +62,29 @@ static void	run_non_interactive(char **envp)
 		shell = init_struct();
 		if (!shell)
 			return (free(line), (void)0);
+		shell->gc_tmp = gc_new();
 		shell->env = create_envp(shell->gc, envp);
 		upgrade_env(shell);
-		shell->cmd = init_cmd(shell->gc);
+		shell->cmd = init_cmd(shell);
 		shell->exec->cmd_list = shell->cmd;
 		shell->tok = NULL;
-		ultime_lexing(&shell->tok, line, shell->gc, shell);
+		if (!ultime_lexing(&shell->tok, line, shell->gc_tmp, shell))
+		{
+			gc_destroy(shell->gc_tmp);
+			free(line);
+			continue ;
+		}
 		if (shell->tok)
 		{
-			ultime_filler(shell);
+			if (!ultime_filler(shell))
+			{
+				reset_element(shell);
+				free(line);
+				continue ;
+			}
 			run_pipes(shell);
 		}
+		gc_destroy(shell->gc_tmp);
 		gc_destroy(shell->gc);
 		free(line);
 	}
@@ -96,16 +105,27 @@ static void	run_interactive(t_shell *shell)
 		if (*line && !is_whitespace(line))
 			add_history(line);
 		if(check_syntaxe(line) == 0)
+		// add le exit code 2
 			continue;
-		shell->cmd = init_cmd(shell->gc);
+		shell->gc_tmp = gc_new();
+		shell->cmd = init_cmd(shell);
 		if (!shell->cmd)
 			return (free(line), (void)0);
 		shell->exec->cmd_list = shell->cmd;
-		shell->tok = NULL;
-		ultime_lexing(&shell->tok, line, shell->gc, shell);
+		if (!ultime_lexing(&shell->tok, line, shell->gc_tmp, shell))
+		{
+			reset_element(shell);
+			free(line);
+			continue ;
+		}
 		if (shell->tok)
 		{
-			ultime_filler(shell);
+			if (!ultime_filler(shell))
+			{
+				reset_element(shell);
+				free(line);
+				continue ;
+			}
 			run_pipes(shell);
 		}
 		if(g_last_signal)
@@ -113,8 +133,9 @@ static void	run_interactive(t_shell *shell)
 			shell->exec->last_exit = 128 + g_last_signal;
 			g_last_signal = 0;
 		}
+		reset_element(shell);
 		free(line);
-		printf("%d", shell->exec->last_exit);
+		printf("%d ", shell->exec->last_exit);
 	}
 }
 
