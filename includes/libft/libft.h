@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/14 17:09:01 by saibelab         ###   ########.fr       */
+/*   Updated: 2025/12/12 17:54:18 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@
 # include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
-# include <stdarg.h>
+#
+
+typedef struct s_gc t_gc;
 
 typedef struct s_list
 {
@@ -50,6 +52,7 @@ int				ft_tolower(int c);
 int				ft_memcmp(const void *s1, const void *s2, size_t n);
 int				ft_lstsize(t_list *lst);
 int				find_newline(char *str);
+int				ft_strcmp(const char *s1, const char *s2);
 
 char			*ft_strnstr(const char *str, const char *to_find, size_t n);
 char			*ft_strdup(const char *s);
@@ -68,6 +71,7 @@ char			*append(char *stock, char *buf);
 char			*create_new_stock(char *stock, char *new_stock, char *buf);
 char			*ft_strncpy(char *dest, char *src, unsigned int n);
 char			*ft_strndup(const char *s, int n);
+char			*gc_strndup(t_gc *gc, const char *s, int n);
 
 char			**ft_split(char const *s, char c);
 
@@ -99,6 +103,8 @@ void			print_hex_upper(va_list param, int *count);
 void			print_pointer(va_list param, int *count);
 int				ft_is_whitespace(char s);
 int				ft_strncmp_custom(const char *s1, const char *s2, size_t n);
+int				ft_strcmp_trim(const char *s1, const char *s2);
+int				is_whitespace(char *s);
 
 void			*ft_memchr(const void *arr, int c, size_t n);
 void			*ft_calloc(size_t elementCount, size_t elementSize);

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 19:38:08 by pmalumba          #+#    #+#             */
-/*   Updated: 2025/12/19 16:52:39 by pmalumba         ###   ########.fr       */
+/*   Created: 2025/11/25 18:53:16 by saibelab          #+#    #+#             */
+/*   Updated: 2025/12/23 17:38:18 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ void	gc_destroy(t_gc *gc)
 	cur = gc->head;
 	while (cur)
 	{
-		if (!cur)
-			continue ;
 		next = cur->next;
 		free(cur->ptr);
 		free(cur);
@@ -117,28 +115,54 @@ char	*gc_strndup(t_gc *gc, const char *s, int n)
 	return (dup);
 }
 
-char	*gc_strjoin(t_gc *gc, char const *s1, char const *s2)
+char	*gc_substr(t_gc *gc, char const *s, unsigned int start, size_t len)
 {
+	char	*s2;
+	size_t	s_len;
 	size_t	i;
-	size_t	j;
-	size_t	len;
-	char	*s3;
 
-	if (!s1 || !s2)
+	if (!s)
 		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (gc_strdup(gc, ""));
+	if (len > s_len - start)
+		len = s_len - start;
+	s2 = (char *)gc_calloc(gc, sizeof(char) * s_len);
+	if (!s2)
+		return (NULL);
 	i = 0;
-	j = 0;
-	s3 = gc_calloc(gc, sizeof(char) * len);
-	if (!s3)
-		return (NULL);
-	while (s1[i] != '\0')
+	while (i < len)
 	{
-		s3[i] = s1[i];
+		s2[i] = s[start + i];
 		i++;
 	}
-	while (s2[j] != '\0')
-		s3[i++] = s2[j++];
-	s3[i] = '\0';
-	return (s3);
+	s2[i] = '\0';
+	return (s2);
+}
+
+char	*gc_strjoin(t_gc *gc, const char *s1, const char *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*out;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (s1)
+		len1 = ft_strlen(s1);
+	else
+		len1 = 0;
+	if (s2)
+		len2 = ft_strlen(s2);
+	else
+		len2 = 0;
+	out = gc_calloc(gc, sizeof(char) * (len1 + len2 + 1));
+	if (!out)
+		return (NULL);
+	if (s1)
+		ft_strlcpy(out, s1, len1 + 1);
+	if (s2)
+		ft_strlcat(out, s2, len1 + len2 + 1);
+	return (out);
 }

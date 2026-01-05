@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   extra_redirs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 17:02:30 by saibelab          #+#    #+#             */
-/*   Updated: 2025/11/28 17:37:50 by saibelab         ###   ########.fr       */
+/*   Created: 2026/01/02 20:19:46 by pmalumba          #+#    #+#             */
+/*   Updated: 2026/01/02 20:35:55 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strchr(const char *s, int c )
+t_cmd	*handle_pipe(t_shell *s, t_cmd *cmd)
 {
-	char	*str;
-
-	str = (char *)s;
-	while (*str)
-	{
-		if (*str == (char)c)
-			return (str);
-		str++;
-	}
-	if (*str == (char)c)
-		return (str);
-	return (NULL);
+	cmd->next = init_cmd(s);
+	if (!cmd->next)
+		return (NULL);
+	return (cmd->next);
 }
