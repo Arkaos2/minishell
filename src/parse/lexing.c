@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/02 20:01:02 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:29:54 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,13 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 	{
 		ref = handle_quotes(tok, str, &v, s);
 		if (ref == -1)
+		{
+			ft_fprintf(2,
+				 "bash: syntax error near unexpected token `newline'\n");
+			if (s && s->exec)
+				s->exec->last_exit = 2;
 			return (0);
+		}
 		if (ref == 1)
 			continue ;
 		if (redir_inxheredoc(tok, str, &v, gc))

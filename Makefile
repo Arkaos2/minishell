@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2026/01/05 18:43:31 by saibelab         ###   ########.fr        #
+#    Updated: 2026/01/05 19:33:32 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRCS			= src/main.c \
 			src/environement/fill_env.c \
 			src/exec/exec.c \
 			src/exec/pipes.c \
-			src/exec/free.c \
+			src/exec/cleanup.c \
 			src/exec/redirection.c \
 			src/exec/here_doc.c \
 			src/parse/list.c \
