@@ -14,14 +14,20 @@
 
 void	exec_child(t_cmd *cmd, t_shell *shell)
 {
-	char	**envp;
-	char	*path;
+	char		**envp;
+	char		*path;
+	struct stat	st;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		cleanup_on_error(shell);
 	envp = env_to_char(shell);
 	if (!envp)
 		cleanup_on_error(shell);
+	if (stat(cmd->args[0], &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_fprintf(2, "%s: Is a directory\n", cmd->args[0]);
+		safe_exit(shell, 126);
+	}
 	path = get_cmd_path(cmd->args[0], shell->env, shell->gc);
 	if (!path)
 	{

@@ -30,35 +30,44 @@ int	check_export(t_cmd *cmd)
 	return (0);
 }
 
-int	handle_export(t_cmd *cmd, t_shell *s, t_gc *gc)
+static void	process_arg(char *arg, t_shell *s, t_gc *gc)
 {
-	int		i;
 	char	*key;
 	char	*value;
 	char	*eq;
 
-	i = 1;
+	eq = ft_strchr(arg, '=');
+	if (eq)
+	{
+		key = gc_strndup(gc, arg, eq - arg);
+		value = gc_strdup(gc, eq + 1);
+		update_env(s->env, key, value, gc);
+	}
+	else
+	{
+		key = gc_strdup(gc, arg);
+		if (!get_env_value(s->env, key))
+			update_env(s->env, key, NULL, gc);
+	}
+}
+
+int	handle_export(t_cmd *cmd, t_shell *s, t_gc *gc)
+{
+	int		i;
+
 	if (check_export(cmd))
 		return (1);
+	if (!cmd->args[1])
+	{
+		handle_env(s, 1);
+		return (0);
+	}
+	i = 1;
 	while (cmd->args[i])
 	{
-		eq = ft_strchr(cmd->args[i], '=');
-		if (eq)
-		{
-			key = gc_strndup(gc, cmd->args[i], eq - cmd->args[i]);
-			value = gc_strdup(gc, eq + 1);
-			update_env(s->env, key, value, gc);
-		}
-		else
-		{
-			key = gc_strdup(gc, cmd->args[i]);
-			if (!get_env_value(s->env, key))
-				update_env(s->env, key, NULL, gc);
-		}
+		process_arg(cmd->args[i], s, gc);
 		i++;
 	}
-	if (!cmd->args[1])
-		handle_env(s, 1);
 	return (0);
 }
 

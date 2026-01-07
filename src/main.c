@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static t_shell	*init_struct(void)
+t_shell	*init_struct(void)
 {
 	t_shell	*shell;
 	t_gc	*gc;
@@ -43,97 +43,26 @@ t_cmd	*init_cmd(t_shell *shell)
 	return (cmd);
 }
 
-static void	run_non_interactive(char **envp)
-{
-	t_shell	*shell;
-	char	*line;
-	size_t	len;
-
-	while ((line = get_next_line(STDIN_FILENO)) != NULL)
-	{
-		len = ft_strlen(line);
-		if (len && line[len - 1] == '\n')
-			line[len - 1] = '\0';
-		if (*line == '\0')
-		{
-			free(line);
-			continue;
-		}
-		shell = init_struct();
-		if (!shell)
-			return (free(line), (void)0);
-		shell->gc_tmp = gc_new();
-		shell->env = create_envp(shell->gc, envp);
-		upgrade_env(shell);
-		shell->cmd = init_cmd(shell);
-		shell->exec->cmd_list = shell->cmd;
-		shell->tok = NULL;
-		if (!ultime_lexing(&shell->tok, line, shell->gc_tmp, shell))
-		{
-			gc_destroy(shell->gc_tmp);
-			free(line);
-			continue ;
-		}
-		if (shell->tok)
-		{
-			if (!ultime_filler(shell))
-			{
-				reset_element(shell);
-				free(line);
-				continue ;
-			}
-			run_pipes(shell);
-		}
-		gc_destroy(shell->gc_tmp);
-		gc_destroy(shell->gc);
-		free(line);
-	}
-}
-
-static void	run_interactive(t_shell *shell)
+void	run_interactive(t_shell *shell)
 {
 	char	*line;
-	int ret;
+	int		ret;
 
 	while (1)
 	{
-		g_last_signal = 0;
-		line = readline("minishell: ");
-		if (!line)
-			break;
-		if (g_last_signal == 130)
-			shell->exec->last_exit = 130;
-		if (*line && !is_whitespace(line))
-			add_history(line);
-		ret = check_syntaxe(line);
-		if (ret != 1)
-		{
-			if (ret == 2)
-				shell->exec->last_exit = 2;
-			continue;
-		}
+		ret = handle_readline(shell, &line);
+		if (ret == 0)
+			break ;
+		if (ret == -1)
+			continue ;
 		shell->gc_tmp = gc_new();
 		shell->cmd = init_cmd(shell);
 		if (!shell->cmd)
 			return (free(line), (void)0);
 		shell->exec->cmd_list = shell->cmd;
-		if (!ultime_lexing(&shell->tok, line, shell->gc_tmp, shell))
-		{
+		if (!process_interactive_line(shell, line))
 			reset_element(shell);
-			free(line);
-			continue ;
-		}
-		if (shell->tok)
-		{
-			if (!ultime_filler(shell))
-			{
-				reset_element(shell);
-				free(line);
-				continue ;
-			}
-			run_pipes(shell);
-		}
-		if(g_last_signal)
+		if (g_last_signal)
 		{
 			shell->exec->last_exit = 128 + g_last_signal;
 			g_last_signal = 0;

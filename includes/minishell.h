@@ -22,7 +22,8 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 # include "ft_fprintf/ft_fprintf.h"
-# include "sys/wait.h"
+# include <sys/wait.h>
+# include <sys/stat.h>
 
 extern volatile sig_atomic_t	g_last_signal;
 
@@ -105,6 +106,14 @@ typedef struct s_shell
 	t_gc	*gc_tmp;
 }			t_shell;
 
+int			process_interactive_line(t_shell *shell, char *line);
+void		run_non_interactive(char **envp);
+int			process_interactive_line(t_shell *shell, char *line);
+int			handle_readline(t_shell *shell, char **line);
+void		run_interactive(t_shell *shell);
+
+int			redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc);
+t_shell		*init_struct(void);
 int			fill_all_heredocs(t_shell *shell);
 int			setup_heredoc_input(t_shell *shell, t_cmd *cmd);
 

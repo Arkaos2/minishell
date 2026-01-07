@@ -37,9 +37,6 @@ static void	open_output_redirections(t_redir *redir, t_shell *s)
 {
 	int	fd;
 
-	t_token *tok;
-
-	tok = s->tok;
 	while (redir)
 	{
 		if (redir->type == R_OUT)

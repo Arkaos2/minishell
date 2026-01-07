@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+																																																	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
@@ -11,29 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc)
-{
-	t_token	*node;
-
-	if (str[*i] != '>')
-		return (0);
-	if (str[*i + 1] == '>')
-	{
-		node = lstnew_token(gc, ">>", TOKEN_REDIR_APPEND);
-		if (!node)
-			return (0);
-		lstadd_backtok(tok, node);
-		*i += 2;
-		return (1);
-	}
-	node = lstnew_token(gc, ">", TOKEN_REDIR_OUT);
-	if (!node)
-		return (0);
-	lstadd_backtok(tok, node);
-	(*i)++;
-	return (1);
-}
 
 static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
 {
@@ -100,6 +77,19 @@ static int	tokenpipe(t_token **tok, char *str, int *i, t_gc *gc)
 	return (0);
 }
 
+static int	process_token(t_token **tok, char *str, int *v, t_gc *gc)
+{
+	if (redir_inxheredoc(tok, str, v, gc))
+		return (1);
+	if (redir_outxappend(tok, str, v, gc))
+		return (1);
+	if (tokenword(tok, str, v, gc))
+		return (1);
+	if (tokenpipe(tok, str, v, gc))
+		return (1);
+	return (0);
+}
+
 int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 {
 	int	v;
@@ -114,20 +104,14 @@ int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 		if (ref == -1)
 		{
 			ft_fprintf(2,
-				 "bash: syntax error near unexpected token `newline'\n");
+				"bash: syntax error near unexpected token `newline'\n");
 			if (s && s->exec)
 				s->exec->last_exit = 2;
 			return (0);
 		}
 		if (ref == 1)
 			continue ;
-		if (redir_inxheredoc(tok, str, &v, gc))
-			continue ;
-		if (redir_outxappend(tok, str, &v, gc))
-			continue ;
-		if (tokenword(tok, str, &v, gc))
-			continue ;
-		if (tokenpipe(tok, str, &v, gc))
+		if (process_token(tok, str, &v, gc))
 			continue ;
 		v++;
 	}
