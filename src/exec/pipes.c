@@ -27,7 +27,7 @@ int	count_cmds(t_cmd *cmd)
 
 static void	cleanup_allocated_pipes(int **pipes, int count)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (j < count)
@@ -40,10 +40,10 @@ static void	cleanup_allocated_pipes(int **pipes, int count)
 	}
 }
 
-int **create_pipes(int nb_cmd, t_gc *gc)
+int	**create_pipes(int nb_cmd, t_gc *gc)
 {
-	int **pipes;
-	int i;
+	int	**pipes;
+	int	i;
 
 	if (nb_cmd <= 1)
 		return (NULL);

@@ -23,9 +23,14 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 	envp = env_to_char(shell);
 	if (!envp)
 		cleanup_on_error(shell);
-	if (stat(cmd->args[0], &st) == 0 && S_ISDIR(st.st_mode))
+	if (stat(cmd->args[0], &st) == 0 && (st.st_mode & S_IFMT) == S_IFDIR)
 	{
 		ft_fprintf(2, "%s: Is a directory\n", cmd->args[0]);
+		safe_exit(shell, 126);
+	}
+	if (stat(cmd->args[0], &st) == 0 && access(cmd->args[0], X_OK) == -1)
+	{
+		ft_fprintf(2, "%s: Permission denied\n", cmd->args[0]);
 		safe_exit(shell, 126);
 	}
 	path = get_cmd_path(cmd->args[0], shell->env, shell->gc);
