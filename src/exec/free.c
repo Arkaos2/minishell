@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:54:33 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 18:48:17 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:34:27 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	safe_exit(t_shell *s, int code)
 
 void	close_all_pipes(int **pipes, int nb_cmd)
 {
-	int i;
+	int	i;
 
 	if (!pipes)
 		return ;
@@ -43,4 +43,3 @@ void	close_all_pipes(int **pipes, int nb_cmd)
 		i++;
 	}
 }
-

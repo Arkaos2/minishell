@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extra_redirs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:19:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/02 20:35:55 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:44:54 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,33 @@ int	redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc)
 		return (0);
 	lstadd_backtok(tok, node);
 	(*i)++;
+	return (1);
+}
+
+int	redirs_syntax(t_shell *shell)
+{
+	t_token	*tok;
+
+	if (!shell)
+		return (0);
+	tok = shell->tok;
+	while (tok)
+	{
+		if (tok->type == TOKEN_PIPE)
+		{
+			if (!tok->next || tok->next->type == TOKEN_PIPE)
+				return (shell->exec->last_exit = 1,
+					ft_fprintf(2, "bash: syntax error "
+						"near unexpected token `|'\n"), 0);
+		}
+		if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_REDIR_APPEND)
+		{
+			if (!tok->next || tok->next->type != TOKEN_WORD)
+				return (shell->exec->last_exit = 1,
+					ft_fprintf(2, "bash: syntax error",
+						" near unexpected token `%s'\n", tok->value), 0);
+		}
+		tok = tok->next;
+	}
 	return (1);
 }

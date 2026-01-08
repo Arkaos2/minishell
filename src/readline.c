@@ -47,8 +47,11 @@ void	run_non_interactive(char **envp)
 	char	*line;
 	size_t	len;
 
-	while ((line = get_next_line(STDIN_FILENO)) != NULL)
+	while (1)
 	{
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+			break ;
 		len = ft_strlen(line);
 		if (len && line[len - 1] == '\n')
 			line[len - 1] = '\0';
@@ -62,15 +65,15 @@ void	run_non_interactive(char **envp)
 			return (free(line), (void)0);
 		if (!process_line_non_interactive(shell, line))
 			reset_element(shell);
-		gc_destroy(shell->gc_tmp);
-		gc_destroy(shell->gc);
-		free(line);
+		1 && (gc_destroy(shell->gc_tmp), gc_destroy(shell->gc), free(line), 0);
 	}
 }
 
 int	process_interactive_line(t_shell *shell, char *line)
 {
 	if (!ultime_lexing(&shell->tok, line, shell->gc_tmp, shell))
+		return (0);
+	if (!redirs_syntax(shell))
 		return (0);
 	if (shell->tok)
 	{

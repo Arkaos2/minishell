@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   update_env.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/08 16:33:54 by saibelab          #+#    #+#             */
+/*   Updated: 2026/01/08 16:33:54 by saibelab         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static t_envp	*create_env_node(t_shell *shell, char *key, char *value)
@@ -50,4 +62,3 @@ int	upgrade_env(t_shell *shell)
 	add_env_var(shell, "SHLVL", "1");
 	return (0);
 }
-

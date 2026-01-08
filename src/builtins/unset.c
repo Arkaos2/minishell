@@ -6,16 +6,16 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 16:02:37 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:24:15 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:33:24 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_envp *get_prev_for_key(t_envp *env, char *key)
+static t_envp	*get_prev_for_key(t_envp *env, char *key)
 {
-	t_envp *prev;
-	t_envp *cur;
+	t_envp	*prev;
+	t_envp	*cur;
 
 	if (!env || !key)
 		return (NULL);
@@ -69,10 +69,9 @@ static int	remove_env_key(t_envp *env, char *key)
 	return (remove_first_env(env, key));
 }
 
-
 int	handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc)
 {
-	int i;
+	int	i;
 
 	(void)gc;
 	if (!cmd || !cmd->args)

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:47:50 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:48:21 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:32:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_export(t_cmd *cmd)
 {
-	int i;
+	int	i;
 
 	if (!cmd || !cmd->args)
 		return (0);
@@ -24,7 +24,8 @@ int	check_export(t_cmd *cmd)
 		if (!cmd->args[i][0])
 			return (0);
 		if (!ft_isalpha(cmd->args[i][0]) && cmd->args[i][0] != '_')
-			return (ft_fprintf(2, "minishell: export: '%s': not a valid identifier\n", cmd->args[i]), 1);
+			return (ft_fprintf(2, "minishell: export: '%s':' "
+					"not a valid identifier\n", cmd->args[i]), 1);
 		i++;
 	}
 	return (0);
@@ -70,4 +71,3 @@ int	handle_export(t_cmd *cmd, t_shell *s, t_gc *gc)
 	}
 	return (0);
 }
-

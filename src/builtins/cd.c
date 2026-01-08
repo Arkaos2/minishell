@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:39:04 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/02 15:57:47 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:29:53 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	update_env(t_envp *env, char *key, char *value, t_gc *gc)
 				env->value = NULL;
 			else
 				env->value = gc_strdup(gc, value);
-			return;
+			return ;
 		}
 		if (!env->next)
-			break;
+			break ;
 		env = env->next;
 	}
 	new = gc_calloc(gc, sizeof(t_envp));
@@ -55,7 +55,8 @@ static char	*get_cd_path(t_cmd *cmd, t_envp *env)
 {
 	char	*path;
 
-	if (!cmd->args[1] || ft_strcmp(cmd->args[1], "~") == 0)
+	if (!cmd->args[1] || ft_strcmp(cmd->args[1], "~") == 0
+		|| ft_strcmp(cmd->args[1], "--") == 0)
 		path = get_env_value(env, "HOME");
 	else if (ft_strcmp(cmd->args[1], "-") == 0)
 	{
@@ -79,8 +80,6 @@ int	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 	char	*newpwd;
 	char	*path;
 
-	if (cmd->args[1] && ft_strcmp(cmd->args[1], "--") == 0)
-		return (0);
 	oldpwd = getcwd(NULL, 0);
 	path = get_cd_path(cmd, env);
 	if (!path)
@@ -101,5 +100,3 @@ int	handle_cd(t_cmd *cmd, t_envp *env, t_gc *gc)
 	free(newpwd);
 	return (0);
 }
-
-

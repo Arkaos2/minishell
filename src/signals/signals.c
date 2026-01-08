@@ -50,4 +50,3 @@ void	exec_distributor(void)
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigint_handler);
 }
-

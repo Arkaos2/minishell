@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:53:08 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:23:19 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:34:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 static int	count_env(t_envp *env)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	while (env)
 	{
 		if (env->value != NULL)
@@ -60,7 +61,6 @@ char	**env_to_char(t_shell *shell)
 
 	if (!shell->env)
 		return (NULL);
-
 	size = count_env(shell->env);
 	return (fill_envp(shell, size));
 }

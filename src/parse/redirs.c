@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/05 18:41:10 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:45:16 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
 	return (0);
 }
 
-static void next_fill_redirs(t_token **tok)
+static void	next_fill_redirs(t_token **tok)
 {
 	if ((*tok)->next)
 		*tok = (*tok)->next->next;

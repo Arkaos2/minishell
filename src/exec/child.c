@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:34:53 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 17:46:52 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:35:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static void	launch_children(t_cmd *cmd, t_shell *shell, int i)
 
 static pid_t	spawn_child(t_shell *shell, int i)
 {
-	pid_t pid;
+	pid_t	pid;
+	char	*cwd;
 
 	if (i < shell->exec->nb_cmd - 1)
 	{
@@ -41,7 +42,7 @@ static pid_t	spawn_child(t_shell *shell, int i)
 			return (-1);
 		}
 	}
-	char *cwd = getcwd(NULL, 0);
+	cwd = getcwd(NULL, 0);
 	free(cwd);
 	pid = fork();
 	if (pid < 0)

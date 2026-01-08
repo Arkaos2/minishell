@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:04:46 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/22 19:06:39 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:13:52 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	if (!s)
 		return (0);
@@ -23,4 +23,3 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
-

@@ -6,10 +6,9 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 16:24:10 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/04 16:24:11 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:12:30 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef FT_FPRINTF_H
 # define FT_FPRINTF_H

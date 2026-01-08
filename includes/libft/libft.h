@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/12 15:01:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/12 17:54:18 by saibelab         ###   ########.fr       */
+/*   Created: 2026/01/08 16:16:16 by saibelab          #+#    #+#             */
+/*   Updated: 2026/01/08 16:19:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <fcntl.h>
 # include <stdarg.h>
 
-typedef struct s_gc t_gc;
+typedef struct s_gc	t_gc;
 
 typedef struct s_list
 {
@@ -32,7 +32,7 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
-typedef void	(*t_fonction)(va_list, int *);
+typedef void		(*t_fonction)(va_list, int *);
 
 typedef struct t_t_conversion
 {

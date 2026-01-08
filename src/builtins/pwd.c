@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:16:27 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/02 16:51:22 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:28:51 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,3 @@ int	handle_pwd(t_envp *env)
 	free(cwd);
 	return (0);
 }
-

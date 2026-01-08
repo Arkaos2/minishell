@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:43:34 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:41:18 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "ft_fprintf/ft_fprintf.h"
 # include <sys/wait.h>
 # include <sys/stat.h>
+# include <sys/types.h>
 # include <errno.h>
 
 extern volatile sig_atomic_t	g_last_signal;
@@ -58,7 +59,7 @@ typedef struct s_redir
 {
 	t_redir_type		type;
 	char				*file;
-	char 				*heredoc_content;
+	char				*heredoc_content;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -181,6 +182,7 @@ t_redir		*lstnew_redir(t_gc *gc, char *value, t_redir_type type);
 void		lstadd_backredir(t_redir **lst, t_redir *new);
 void		lstadd_backtok(t_token **lst, t_token *new);
 
+int			redirs_syntax(t_shell *shell);
 char		*expand_dollars(t_shell *s, char *str);
 int			check_syntaxe(char *str);
 void		reset_element(t_shell *shell);
@@ -191,6 +193,5 @@ int			double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
 int			single_quote(t_token **tok, char *str, int *i, t_gc *gc);
 int			handle_quotes(t_token **tok, char *str, int *i, t_shell *s);
 t_cmd		*handle_pipe(t_shell *s, t_cmd *cmd);
-
 
 #endif

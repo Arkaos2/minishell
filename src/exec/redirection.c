@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:08:15 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 19:10:20 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:44:27 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	open_output_redirections(t_redir *redir, t_shell *s)
 		else
 		{
 			redir = redir->next;
-			continue;
+			continue ;
 		}
 		if (fd < 0)
 		{

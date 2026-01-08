@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:22:39 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:44:12 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int	fill_all_heredocs(t_shell *shell)
 
 int	setup_heredoc_input(t_shell *shell, t_cmd *cmd)
 {
-	(void)shell;
 	t_redir	*r;
 	int		pipefd[2];
 
+	(void)shell;
 	r = cmd->redirs;
 	while (r)
 	{

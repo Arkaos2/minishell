@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 17:30:58 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:41:35 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:31:35 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static void	print_export(t_envp *env)
 
 int	handle_env(t_shell *s, int flag)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(s->cmd->args[i] && s->cmd->args)
+	while (s->cmd->args[i] && s->cmd->args)
 	{
 		if (ft_strcmp(s->cmd->args[i], "env") != 0)
 			return (ft_fprintf(2, "minishell: '%s': No such file or directory\n",
@@ -78,7 +78,7 @@ int	handle_env(t_shell *s, int flag)
 	}
 	if (flag == 1)
 		print_export(s->env);
-	else if(flag == 0)
+	else if (flag == 0)
 		print_env(s->env);
 	else
 		return (1);
