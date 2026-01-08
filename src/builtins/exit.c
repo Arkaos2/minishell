@@ -15,8 +15,13 @@
 int	handle_exit(t_cmd *cmd, t_shell *shell)
 {
 	int	exit_code;
-	int i;
+	int	i;
 
+	if (!cmd->args[1])
+	{
+		write(STDOUT_FILENO, "exit\n", 5);
+		safe_exit(shell, shell->exec->last_exit);
+	}
 	i = 0;
 	while (cmd->args[1][i])
 	{
@@ -29,12 +34,7 @@ int	handle_exit(t_cmd *cmd, t_shell *shell)
 		}
 		i++;
 	}
-	if (!cmd->args[1])
-	{
-		write(STDOUT_FILENO, "exit\n", 5);
-		safe_exit(shell, shell->exec->last_exit);
-	}
-	else if (cmd->args[2])
+	if (cmd->args[2])
 		return (write(STDERR_FILENO, "exit: too many arguments\n", 25), 1);
 	exit_code = ft_atoi(cmd->args[1]);
 	write(STDOUT_FILENO, "exit\n", 5);

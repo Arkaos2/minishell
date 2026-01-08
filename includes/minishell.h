@@ -24,6 +24,7 @@
 # include "ft_fprintf/ft_fprintf.h"
 # include <sys/wait.h>
 # include <sys/stat.h>
+# include <errno.h>
 
 extern volatile sig_atomic_t	g_last_signal;
 

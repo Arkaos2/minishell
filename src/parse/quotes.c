@@ -32,6 +32,7 @@ int	double_quotes(t_token **tok, char *str, int *i, t_gc *gc)
 	node = lstnew_token(gc, res, TOKEN_WORD);
 	if (!node)
 		return (free(res), -1);
+	node->quote = 1;
 	lstadd_backtok(tok, node);
 	free(res);
 	if (str[*i] == '"')
@@ -59,6 +60,7 @@ int	single_quote(t_token **tok, char *str, int *i, t_gc *gc)
 	node = lstnew_token(gc, res, TOKEN_WORD);
 	if (!node)
 		return (free(res), -1);
+	node->quote = 1;
 	lstadd_backtok(tok, node);
 	free(res);
 	if (str[*i] == '\'')
@@ -99,9 +101,6 @@ int	handle_quotes(t_token **tok, char *str, int *i, t_shell *s)
 	if (ref == -1)
 		return (-1);
 	if (ref == 1)
-	{
-		s->tok->quote = 1;
 		return (1);
-	}
 	return (0);
 }

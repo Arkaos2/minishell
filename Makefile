@@ -45,7 +45,8 @@ SRCS			= src/main.c \
 			src/parse/outils.c \
 			src/exec/run_process.c \
 			src/readline.c \
-			src/signals/signals_utils.c
+			src/signals/signals_utils.c \
+			src/exec/child.c 
 
 OBJS			= $(SRCS:.c=.o)
 

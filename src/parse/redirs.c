@@ -18,7 +18,7 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 
 	if (!tok || tok->type != TOKEN_WORD)
 		return (0);
-	if (shell->tok->quote == 1)
+	if (tok->quote == 1)
 	{
 		res = gc_strdup(shell->gc, tok->value);
 		if (!res)
