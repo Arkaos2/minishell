@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:08:15 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 17:37:16 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:10:20 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_redirs(t_redir *r)
-{
-	while (r)
-	{
-		if (r->type == R_IN)
-			ft_fprintf(1, "[R_IN]  %s\n", r->file);
-		else if (r->type == R_OUT)
-			ft_fprintf(1, "[R_OUT] %s\n", r->file);
-		else if (r->type == R_APPEND)
-			ft_fprintf(1, "[R_AP]  %s\n", r->file);
-		else if (r->type == R_HEREDOC)
-			ft_fprintf(1, "[HERED] %s\n", r->file ? r->file : "(heredoc)");
-		r = r->next;
-	}
-}
 
 static void	open_input_redirections(t_redir *redir, t_shell *s)
 {
@@ -53,6 +37,9 @@ static void	open_output_redirections(t_redir *redir, t_shell *s)
 {
 	int	fd;
 
+	t_token *tok;
+
+	tok = s->tok;
 	while (redir)
 	{
 		if (redir->type == R_OUT)

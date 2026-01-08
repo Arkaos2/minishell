@@ -55,7 +55,7 @@ static char	*handle_status(t_shell *s, char *result, int *i)
 	char	*val;
 	char	*new_res;
 
-	val = ft_itoa(s->status);
+	val = ft_itoa(s->exec->last_exit);
 	if (!val)
 		return (NULL);
 	new_res = gc_strjoin(s->gc_tmp, result, val);
@@ -108,7 +108,7 @@ char	*expand_dollars(t_shell *s, char *str)
 		{
 			tmp[0] = str[i++];
 			tmp[1] = '\0';
-			res = gc_strjoin(s->gc, res, tmp);
+			res = gc_strjoin(s->gc_tmp, res, tmp);
 			if (!res)
 				return (NULL);
 		}

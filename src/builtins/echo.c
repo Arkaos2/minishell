@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:10:38 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/31 15:31:26 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/08 15:29:53 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	check_newline(char *flag)
 	int	i;
 
 	i = 0;
-	if (!flag)
+	if (!flag || !flag[i])
 		return (0);
 	if (flag[i] != '-')
 		return (0);
@@ -32,8 +32,8 @@ static int	check_newline(char *flag)
 int	handle_echo(t_cmd *cmd)
 {
 	int	flag;
-	int i;
-	int len;
+	int	i;
+	int	len;
 
 	if (cmd->args[1] && check_newline(cmd->args[1]))
 	{
@@ -45,12 +45,12 @@ int	handle_echo(t_cmd *cmd)
 		i = 1;
 		flag = 0;
 	}
-	while(cmd->args[i])
+	while (cmd->args[i])
 	{
 		len = ft_strlen(cmd->args[i]);
 		write(STDOUT_FILENO, cmd->args[i], len);
-		// if (cmd->args[i + 1])
-		// 	write(STDOUT_FILENO, " ", 1);
+		if (cmd->args[i + 1])
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (flag == 0)

@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 16:49:43 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/02 20:01:02 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/06 17:29:14 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	tokenword(t_token **tok, char *str, int *i, t_gc *gc)
 		return (0);
 	start = *i;
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '<'
-		&& str[*i] != '>' && str[*i] != '|' && str[*i] != 39)
+		&& str[*i] != '>' && str[*i] != '|')
 	{
 		(*i)++;
 	}

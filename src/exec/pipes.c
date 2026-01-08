@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 15:04:31 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 17:42:26 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/08 15:26:58 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int **create_pipes(int nb_cmd, t_gc *gc)
 void run_pipes(t_shell *shell)
 {
 	int		status;
+	int		sig;
 	t_cmd	*cmd;
 
 	if (!shell || !shell->exec)
@@ -77,12 +78,23 @@ void run_pipes(t_shell *shell)
 	if (shell->exec->nb_cmd == 1 && shell->exec->cmd_list
 		&& shell->exec->cmd_list->args
 		&& shell->exec->cmd_list->args[0]
-		&& is_builtin(shell->exec->cmd_list->args[0]))
+		&& is_builtin(shell->exec->cmd_list->args[0])
+		&& shell->exec->cmd_list->redirs == NULL)
 	{
-		shell->exec->last_exit = handle_builtin(shell->exec->cmd_list, shell->env, shell->gc_tmp);
+		shell->exec->last_exit = handle_builtin(shell->exec->cmd_list, shell);
 		return ;
 	}
-	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc_tmp);
+	cmd = shell->exec->cmd_list;
+	while (cmd)
+	{
+		if (!check_redirs(cmd))
+		{
+			shell->exec->last_exit = 1;
+			return ;
+		}
+		cmd = cmd->next;
+	}
+	shell->exec->pipes = create_pipes(shell->exec->nb_cmd, shell->gc);
 	if (!shell->exec->pipes && shell->exec->nb_cmd > 1)
 		cleanup_on_error(shell);
 	if (!shell->exec->pipes && shell->exec->nb_cmd > 1)
@@ -90,11 +102,14 @@ void run_pipes(t_shell *shell)
 		perror("pipe");
 		return ;
 	}
-	fill_all_heredocs(shell);
+	if (fill_all_heredocs(shell) == -1)
+	{
+		shell->exec->last_exit = 130;
+		return ;
+	}
 	run_children(shell);
 	close_all_pipes(shell->exec->pipes, shell->exec->nb_cmd);
 	cmd = shell->exec->cmd_list;
-	shell->exec->last_exit = 0;
 	while (cmd)
 	{
 		if (waitpid(cmd->pid, &status, 0) > 0)
@@ -102,7 +117,12 @@ void run_pipes(t_shell *shell)
 			if (WIFEXITED(status))
 				shell->exec->last_exit = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
+				sig = WTERMSIG(status);
+				if (sig == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 				shell->exec->last_exit = 128 + WTERMSIG(status);
+			}
 		}
 		cmd = cmd->next;
 	}

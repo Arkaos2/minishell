@@ -3,14 +3,12 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+         #
+#    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2026/01/02 20:21:47 by pmalumba         ###   ########.fr        #
+#    Updated: 2026/01/05 18:43:31 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-#-fsanitize=address
 
 NAME			= minishell
 CC				= cc
@@ -19,19 +17,18 @@ LDFLAGS			= -lreadline
 
 SRCS			= src/main.c \
 			src/gc.c \
+			src/gc_utils.c \
 			src/environement/environement.c \
 			src/exec/check_path.c \
-			src/exec/fill_env.c \
+			src/environement/fill_env.c \
 			src/exec/exec.c \
 			src/exec/pipes.c \
 			src/exec/free.c \
 			src/exec/redirection.c \
 			src/exec/here_doc.c \
 			src/parse/list.c \
-			src/parse/outils.c \
 			src/parse/expand_dollars.c \
 			src/parse/redirs.c \
-			src/parse/extra_redirs.c \
 			src/parse/quotes.c \
 			src/parse/lexing.c \
 			src/builtins/builtin_check.c \
@@ -39,9 +36,13 @@ SRCS			= src/main.c \
 			src/builtins/env.c \
 			src/builtins/cd.c \
 			src/builtins/pwd.c \
-			src/builtins/export.c
-
-
+			src/builtins/export.c \
+			src/builtins/unset.c \
+			src/builtins/exit.c \
+			src/environement/update_env.c \
+			src/signals/signals.c \
+			src/parse/extra_redirs.c \
+			src/parse/outils.c
 
 OBJS			= $(SRCS:.c=.o)
 

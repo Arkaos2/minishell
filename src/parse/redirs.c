@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/05 17:14:47 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/06 20:02:53 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 		return (0);
 	if (shell->tok->quote == 1)
 	{
-		res = gc_strdup(shell->gc, tok->value);
+		res = gc_strdup(shell->gc_tmp, tok->value);
 		if (!res)
 			return (0);
 	}
@@ -41,10 +41,10 @@ t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 	t_redir	*node;
 	char	*res;
 
-	node = gc_calloc(shell->gc, sizeof(t_redir));
+	node = gc_calloc(shell->gc_tmp, sizeof(t_redir));
 	if (!node)
 		return (NULL);
-	res = gc_strdup(shell->gc, tok->next->value);
+	res = gc_strdup(shell->gc_tmp, tok->next->value);
 	if (!res)
 		return (NULL);
 	node->file = res;
@@ -84,10 +84,10 @@ int	fill_redirs(t_token *tok, t_shell *s, t_cmd *cmd)
 
 static void next_fill_redirs(t_token **tok)
 {
-    if ((*tok)->next)
-        *tok = (*tok)->next->next;
-    else
-        *tok = NULL;
+	if ((*tok)->next)
+		*tok = (*tok)->next->next;
+	else
+		*tok = NULL;
 }
 
 int	ultime_filler(t_shell *s)
@@ -117,42 +117,3 @@ int	ultime_filler(t_shell *s)
 	}
 	return (1);
 }
-
-// int	ultime_filler(t_shell *s)
-// {
-// 	t_cmd	*cmd;
-// 	int		v;
-// 	t_token	*tok;
-
-// 	v = 0;
-// 	cmd = s->cmd;
-// 	tok = s->tok;
-// 	while (tok)
-// 	{
-// 		if (tok->type == TOKEN_PIPE)
-// 		{
-// 			cmd->next = init_cmd(s);
-// 			if (!cmd->next)
-// 				return (0);
-// 			cmd = cmd->next;
-// 			v = 0;
-// 			tok = tok->next;
-// 			continue ;
-// 		}
-// 		if (fill_redirs(tok, s, cmd))
-// 		{
-// 			if (tok && tok->next)
-// 				tok = tok->next->next;
-// 			else
-// 				tok = NULL;
-// 			continue ;
-// 		}
-// 		if (fill_args(tok, s, cmd))
-// 		{
-// 			tok = tok->next;
-// 			continue ;
-// 		}
-// 		tok = tok->next;
-// 	}
-// 	return (1);
-// }

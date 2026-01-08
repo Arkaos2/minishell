@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:54:33 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/17 15:59:11 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/05 18:48:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,13 @@ void	cleanup_on_error(t_shell *shell)
 	safe_exit(shell, 1);
 }
 
-void	safe_exit(t_shell *shell, int code)
+void	safe_exit(t_shell *s, int code)
 {
-	if (shell && shell->gc)
-		gc_destroy(shell->gc);
+	if (s->gc && s)
+	{
+		gc_destroy(s->gc_tmp);
+		gc_destroy(s->gc);
+	}
 	exit(code);
 }
 

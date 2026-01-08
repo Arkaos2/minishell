@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:17:26 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/05 17:46:14 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/06 20:03:59 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**fill_array(t_shell *shell, char **old_array, char *new)
 		while (old_array[size])
 			size++;
 	}
-	new_array = gc_calloc(shell->gc, sizeof(char *) * (size + 2));
+	new_array = gc_calloc(shell->gc_tmp, sizeof(char *) * (size + 2));
 	if (!new_array)
 		return (NULL);
 	i = 0;
