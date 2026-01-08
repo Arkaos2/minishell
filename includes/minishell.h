@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 16:41:18 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:48:37 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_redir
 	t_redir_type		type;
 	char				*file;
 	char				*heredoc_content;
+	int					quoted;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -113,6 +114,10 @@ void		run_non_interactive(char **envp);
 int			process_interactive_line(t_shell *shell, char *line);
 int			handle_readline(t_shell *shell, char **line);
 void		run_interactive(t_shell *shell);
+
+
+t_redir		*alloc_redir_with_file(t_token *tok, t_shell *shell);
+void		set_redir_type(t_redir *node, t_token *tok);
 
 int			redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc);
 t_shell		*init_struct(void);
@@ -174,6 +179,10 @@ int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 
 int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
+
+t_token *last_token(t_token *tok);
+int append_word(t_token **tok, t_gc *gc, char *value, int quoted);
+
 
 int			ultime_filler(t_shell *s);
 

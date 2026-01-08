@@ -6,35 +6,57 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 16:44:12 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 18:25:02 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*read_heredoc_content(t_shell *shell, char *delimiter)
+static char *process_heredoc_line(t_shell *shell, char *line, int expand)
 {
-	char	*line;
-	char	*content;
+	char *part;
 
-	heredoc_signal_distributor();
+	if (expand)
+	{
+		char *tmp = expand_dollars(shell, line);
+		if (!tmp)
+			return (NULL);
+		part = gc_strdup(shell->gc, tmp);
+		if (!part)
+			return (NULL);
+	}
+	else
+	{
+		part = gc_strdup(shell->gc, line);
+		if (!part)
+			return (NULL);
+	}
+	return (part);
+}
+
+static char *read_heredoc_content(t_shell *shell, char *delimiter, int expand)
+{
+	char *line;
+	char *content;
+	char *part;
+
 	content = gc_strdup(shell->gc, "");
-	while (1)
+	heredoc_signal_distributor();
+	if (!content)
+		return (signal_distributor(), NULL);
+	while (1 && content)
 	{
 		line = readline("> ");
 		if (g_last_signal == SIGINT)
-		{
-			free(line);
-			return (signal_distributor(), NULL);
-		}
+			return (free(line), signal_distributor(), NULL);
 		if (!line)
-			break ;
+			break;
 		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		content = gc_strjoin(shell->gc, content, line);
+			return (free(line), signal_distributor(), content);
+		part = process_heredoc_line(shell, line, expand);
+		if (!part)
+			return (signal_distributor(), NULL);
+		content = gc_strjoin(shell->gc, content, part);
 		content = gc_strjoin(shell->gc, content, "\n");
 		free(line);
 	}
@@ -50,7 +72,7 @@ static int	fill_cmd_heredocs(t_shell *shell, t_cmd *cmd)
 	{
 		if (r->type == R_HEREDOC)
 		{
-			r->heredoc_content = read_heredoc_content(shell, r->file);
+				r->heredoc_content = read_heredoc_content(shell, r->file, !r->quoted);
 			if (r->heredoc_content == NULL)
 				return (-1);
 		}

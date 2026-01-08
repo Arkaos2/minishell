@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/08 16:45:16 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:48:18 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,27 +38,12 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 
 t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 {
-	t_redir	*node;
-	char	*res;
+	t_redir *node;
 
-	node = gc_calloc(shell->gc, sizeof(t_redir));
+	node = alloc_redir_with_file(tok, shell);
 	if (!node)
 		return (NULL);
-	res = gc_strdup(shell->gc, tok->next->value);
-	if (!res)
-		return (NULL);
-	node->file = res;
-	if (!node->file)
-		return (NULL);
-	if (tok->type == TOKEN_REDIR_IN)
-		node->type = R_IN;
-	else if (tok->type == TOKEN_REDIR_OUT)
-		node->type = R_OUT;
-	else if (tok->type == TOKEN_REDIR_APPEND)
-		node->type = R_APPEND;
-	else if (tok->type == TOKEN_HEREDOC)
-		node->type = R_HEREDOC;
-	node->next = NULL;
+	set_redir_type(node, tok);
 	return (node);
 }
 

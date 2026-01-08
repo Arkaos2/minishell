@@ -6,11 +6,42 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:45:01 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 16:45:03 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:20:09 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_token *last_token(t_token *tok)
+{
+    if (!tok)
+        return (NULL);
+    while (tok->next)
+        tok = tok->next;
+    return (tok);
+}
+
+int append_word(t_token **tok, t_gc *gc, char *value, int quoted)
+{
+    t_token *last;
+
+    last = last_token(*tok);
+    if (last && last->type == TOKEN_WORD)
+    {
+        last->value = gc_strjoin(gc, last->value, value);
+        if (!last->value)
+            return (0);
+        if (quoted)
+            last->quote = 1;
+        return (1);
+    }
+    last = lstnew_token(gc, value, TOKEN_WORD);
+    if (!last)
+        return (0);
+    last->quote = quoted;
+    lstadd_backtok(tok, last);
+    return (1);
+}
 
 static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
 {

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:19:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/08 16:44:54 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 18:13:29 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,60 @@ int	redirs_syntax(t_shell *shell)
 		if (tok->type == TOKEN_PIPE)
 		{
 			if (!tok->next || tok->next->type == TOKEN_PIPE)
-				return (shell->exec->last_exit = 1,
-					ft_fprintf(2, "bash: syntax error "
-						"near unexpected token `|'\n"), 0);
+				return (shell->exec->last_exit = 2,
+					ft_fprintf(2,
+						"bash: syntax error near unexpected token `|'\n"), 0);
 		}
-		if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_REDIR_APPEND)
+		if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_HEREDOC)
 		{
 			if (!tok->next || tok->next->type != TOKEN_WORD)
-				return (shell->exec->last_exit = 1,
-					ft_fprintf(2, "bash: syntax error",
-						" near unexpected token `%s'\n", tok->value), 0);
+				return (shell->exec->last_exit = 2,
+					ft_fprintf(2,"bash: syntax error "),
+					ft_fprintf(2,"near unexpected token `%s'\n", tok->value), 0);
+
 		}
 		tok = tok->next;
 	}
 	return (1);
+}
+
+t_redir	*alloc_redir_with_file(t_token *tok, t_shell *shell)
+{
+	t_redir *node;
+	char *res;
+
+	node = gc_calloc(shell->gc, sizeof(t_redir));
+	if (!node)
+		return (NULL);
+	if (tok->next->quote == 2)
+	{
+		res = gc_strdup(shell->gc, tok->next->value);
+		if (!res)
+			return (NULL);
+	}
+	else
+	{
+		char *tmp = expand_dollars(shell, tok->next->value);
+		if (!tmp)
+			return (NULL);
+		res = gc_strdup(shell->gc, tmp);
+		if (!res)
+			return (NULL);
+	}
+	node->file = res;
+	node->quoted = (tok->next->quote == 2);
+	node->next = NULL;
+	return (node);
+}
+
+void	set_redir_type(t_redir *node, t_token *tok)
+{
+	if (tok->type == TOKEN_REDIR_IN)
+		node->type = R_IN;
+	else if (tok->type == TOKEN_REDIR_OUT)
+		node->type = R_OUT;
+	else if (tok->type == TOKEN_REDIR_APPEND)
+		node->type = R_APPEND;
+	else if (tok->type == TOKEN_HEREDOC)
+		node->type = R_HEREDOC;
 }
