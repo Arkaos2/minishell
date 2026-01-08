@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:19:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/08 18:13:29 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 18:50:01 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,32 +74,20 @@ int	redirs_syntax(t_shell *shell)
 
 t_redir	*alloc_redir_with_file(t_token *tok, t_shell *shell)
 {
-	t_redir *node;
-	char *res;
+	t_redir	*node;
 
 	node = gc_calloc(shell->gc, sizeof(t_redir));
 	if (!node)
 		return (NULL);
-	if (tok->next->quote == 2)
-	{
-		res = gc_strdup(shell->gc, tok->next->value);
-		if (!res)
-			return (NULL);
-	}
-	else
-	{
-		char *tmp = expand_dollars(shell, tok->next->value);
-		if (!tmp)
-			return (NULL);
-		res = gc_strdup(shell->gc, tmp);
-		if (!res)
-			return (NULL);
-	}
-	node->file = res;
-	node->quoted = (tok->next->quote == 2);
+	node->file = gc_strdup(shell->gc, tok->next->value);
+	if (!node->file)
+		return (NULL);
+	node->quoted = tok->next->quote;
+	node->heredoc_content = NULL;
 	node->next = NULL;
 	return (node);
 }
+
 
 void	set_redir_type(t_redir *node, t_token *tok)
 {
