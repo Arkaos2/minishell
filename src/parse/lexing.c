@@ -6,42 +6,47 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:45:01 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 17:20:09 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/09 19:16:25 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token *last_token(t_token *tok)
+int	is_separator(char c)
 {
-    if (!tok)
-        return (NULL);
-    while (tok->next)
-        tok = tok->next;
-    return (tok);
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v'
+		|| c == '\f')
+		return (1);
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
 }
 
-int append_word(t_token **tok, t_gc *gc, char *value, int quoted)
+char	*append_char(t_gc *gc, char *str, char c)
 {
-    t_token *last;
+	char	*new_str;
+	int		len;
+	int		i;
 
-    last = last_token(*tok);
-    if (last && last->type == TOKEN_WORD)
-    {
-        last->value = gc_strjoin(gc, last->value, value);
-        if (!last->value)
-            return (0);
-        if (quoted)
-            last->quote = 1;
-        return (1);
-    }
-    last = lstnew_token(gc, value, TOKEN_WORD);
-    if (!last)
-        return (0);
-    last->quote = quoted;
-    lstadd_backtok(tok, last);
-    return (1);
+	len = 0;
+	if (!str)
+		return (NULL);
+	while (str[len])
+		len++;
+	new_str = gc_calloc(gc, sizeof(char) * (len + 2));
+	if (!new_str)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_str[i] = str[i];
+		i++;
+	}
+	new_str[i] = c;
+	new_str[i + 1] = '\0';
+	return (new_str);
 }
+
 
 static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
 {
@@ -66,29 +71,47 @@ static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
 	return (1);
 }
 
-static int	tokenword(t_token **tok, char *str, int *i, t_gc *gc)
+static char	*extract_word_content(char *str, int *i, t_shell *s)
 {
-	int		start;
-	t_token	*node;
 	char	*word;
+	char	*tmp;
 
-	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|' || str[*i] == ' '
-		|| str[*i] == '\t')
-		return (0);
-	start = *i;
-	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '<'
-		&& str[*i] != '>' && str[*i] != '|')
-	{
-		(*i)++;
-	}
-	word = ft_substr(str, start, *i - start);
+	word = gc_strdup(s->gc_tmp, "");
 	if (!word)
+		return (NULL);
+	while (word && str[*i] && !is_separator(str[*i]))
+	{
+		if (str[*i] == '"' || str[*i] == '\'')
+		{
+			if (str[*i] == '"')
+				tmp = double_quotes(str, i, s->gc_tmp);
+			else
+			{
+				s->tok->quote = 1;
+				tmp = single_quote(str, i, s->gc_tmp);
+			}
+			if (!tmp)
+				return (NULL);
+			word = gc_strjoin(s->gc_tmp, word, tmp);
+		}
+		else
+			word = append_char(s->gc_tmp, word, str[(*i)++]);
+	}
+	return (word);
+}
+
+static int	tokenword(t_token **tok, char *str, int *i, t_shell *s)
+{
+	char	*final_word;
+	t_token	*node;
+
+	final_word = extract_word_content(str, i, s);
+	if (!final_word)
 		return (0);
-	node = lstnew_token(gc, word, TOKEN_WORD);
+	node = lstnew_token(s->gc_tmp, final_word, TOKEN_WORD);
 	if (!node)
-		return (free(word), 0);
+		return (0);
 	lstadd_backtok(tok, node);
-	free(word);
 	return (1);
 }
 
@@ -114,8 +137,6 @@ static int	process_token(t_token **tok, char *str, int *v, t_gc *gc)
 		return (1);
 	if (redir_outxappend(tok, str, v, gc))
 		return (1);
-	if (tokenword(tok, str, v, gc))
-		return (1);
 	if (tokenpipe(tok, str, v, gc))
 		return (1);
 	return (0);
@@ -124,27 +145,23 @@ static int	process_token(t_token **tok, char *str, int *v, t_gc *gc)
 int	ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s)
 {
 	int	v;
-	int	ref;
 
 	v = 0;
-	if (!str)
-		return (0);
-	while (str[v])
+	while (str && str[v])
 	{
-		ref = handle_quotes(tok, str, &v, s);
-		if (ref == -1)
+		while (str[v] && (str[v] == ' ' || (str[v] >= 9 && str[v] <= 13)))
+			v++;
+		if (!str[v])
+			break ;
+		if (process_token(tok, str, &v, gc))
+			continue ;
+		if (!tokenword(tok, str, &v, s))
 		{
 			ft_fprintf(2,
 				"bash: syntax error near unexpected token `newline'\n");
-			if (s && s->exec)
-				s->exec->last_exit = 2;
+			s->exec->last_exit = 2;
 			return (0);
 		}
-		if (ref == 1)
-			continue ;
-		if (process_token(tok, str, &v, gc))
-			continue ;
-		v++;
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 17:48:37 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/09 19:14:50 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,12 +178,6 @@ int			**create_pipes(int n, t_gc *gc);
 int			count_cmds(t_cmd *cmd);
 void		close_all_pipes(int **pipes, int n);
 
-int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
-
-t_token *last_token(t_token *tok);
-int append_word(t_token **tok, t_gc *gc, char *value, int quoted);
-
-
 int			ultime_filler(t_shell *s);
 
 t_token		*lstnew_token(t_gc *gc, char *value, t_token_type type);
@@ -198,9 +192,11 @@ void		reset_element(t_shell *shell);
 char		**fill_array(t_shell *shell, char **old_array, char *new);
 t_cmd		*init_cmd(t_shell *shell);
 
-int			double_quotes(t_token **tok, char *str, int *i, t_gc *gc);
-int			single_quote(t_token **tok, char *str, int *i, t_gc *gc);
+char*		double_quotes(char *str, int *i, t_gc *gc);
+char*		single_quote(char *str, int *i, t_gc *gc);
 int			handle_quotes(t_token **tok, char *str, int *i, t_shell *s);
 t_cmd		*handle_pipe(t_shell *s, t_cmd *cmd);
+int			ultime_lexing(t_token **tok, char *str, t_gc *gc, t_shell *s);
+
 
 #endif
