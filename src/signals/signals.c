@@ -50,9 +50,3 @@ void	exec_distributor(void)
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigint_handler);
 }
-
-void	sig_ignore(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, SIG_IGN);
-}

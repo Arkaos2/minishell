@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:03:02 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 17:12:44 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:29:17 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	is_builtin(char *cmd)
 		"export",
 		NULL
 	};
+
 	i = 0;
 	while (builtins[i] != NULL)
 	{
@@ -44,9 +45,9 @@ int	handle_builtin(t_cmd *cmd, t_shell *shell)
 	else if (strcmp(cmd->args[0], "exit") == 0)
 		return (handle_exit(cmd, shell));
 	else if (strcmp(cmd->args[0], "env") == 0)
-		return (handle_env(shell->env, 0));
+		return (handle_env(shell, 0));
 	else if (strcmp(cmd->args[0], "export") == 0)
-		return (handle_export(cmd, shell->env, shell->gc));
+		return (handle_export(cmd, shell, shell->gc));
 	else if (strcmp(cmd->args[0], "unset") == 0)
 		return (handle_unset(cmd, shell->env, shell->gc));
 	else if (strcmp(cmd->args[0], "pwd") == 0)

@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/01 17:12:43 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:33:46 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ char	*key_finder(t_gc *gc, char *envp)
 	return (key);
 }
 
-t_envp *check_node(t_gc *gc, char *envp)
+t_envp	*check_node(t_gc *gc, char *envp)
 {
-	t_envp *node;
+	t_envp	*node;
 
 	if (!envp)
 		return (NULL);
@@ -73,4 +73,3 @@ t_envp	*create_envp(t_gc *gc, char **envp)
 	}
 	return (head);
 }
-

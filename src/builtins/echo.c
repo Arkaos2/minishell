@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 15:10:38 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 15:29:53 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:24:56 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_newline(char *flag)
+static int	check_flag(char *flag)
 {
 	int	i;
 
@@ -29,22 +29,27 @@ static int	check_newline(char *flag)
 	return (1);
 }
 
+static int	skip_n(char **args, int *flag)
+{
+	int	i;
+
+	i = 1;
+	*flag = 0;
+	while (args[i] && check_flag(args[i]))
+	{
+		*flag = 1;
+		i++;
+	}
+	return (i);
+}
+
 int	handle_echo(t_cmd *cmd)
 {
 	int	flag;
 	int	i;
 	int	len;
 
-	if (cmd->args[1] && check_newline(cmd->args[1]))
-	{
-		i = 2;
-		flag = 1;
-	}
-	else
-	{
-		i = 1;
-		flag = 0;
-	}
+	i = skip_n(cmd->args, &flag);
 	while (cmd->args[i])
 	{
 		len = ft_strlen(cmd->args[i]);

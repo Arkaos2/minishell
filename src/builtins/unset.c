@@ -6,16 +6,16 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 16:02:37 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 17:12:42 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:33:24 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_envp *get_prev_for_key(t_envp *env, char *key)
+static t_envp	*get_prev_for_key(t_envp *env, char *key)
 {
-	t_envp *prev;
-	t_envp *cur;
+	t_envp	*prev;
+	t_envp	*cur;
 
 	if (!env || !key)
 		return (NULL);
@@ -31,10 +31,30 @@ static t_envp *get_prev_for_key(t_envp *env, char *key)
 	return (NULL);
 }
 
-static int remove_env_key(t_envp *env, char *key)
+static int	remove_first_env(t_envp *env, char *key)
 {
-	t_envp *prev;
-	t_envp *cur;
+	if (env && ft_strcmp(env->key, key) == 0)
+	{
+		if (env->next)
+		{
+			env->key = env->next->key;
+			env->value = env->next->value;
+			env->next = env->next->next;
+		}
+		else
+		{
+			env->key = "";
+			env->value = NULL;
+		}
+		return (1);
+	}
+	return (0);
+}
+
+static int	remove_env_key(t_envp *env, char *key)
+{
+	t_envp	*prev;
+	t_envp	*cur;
 
 	if (!env || !key)
 		return (0);
@@ -46,28 +66,12 @@ static int remove_env_key(t_envp *env, char *key)
 			prev->next = cur->next;
 		return (1);
 	}
-	cur = env;
-	if (cur && ft_strcmp(cur->key, key) == 0)
-	{
-		if (cur->next)
-		{
-			cur->key = cur->next->key;
-			cur->value = cur->next->value;
-			cur->next = cur->next->next;
-		}
-		else
-		{
-			cur->key = "";
-			cur->value = NULL;
-		}
-		return (1);
-	}
-	return (0);
+	return (remove_first_env(env, key));
 }
 
 int	handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc)
 {
-	int i;
+	int	i;
 
 	(void)gc;
 	if (!cmd || !cmd->args)

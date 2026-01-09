@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:47:50 by saibelab          #+#    #+#             */
-/*   Updated: 2025/12/23 17:35:01 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:32:45 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_export(t_cmd *cmd)
 {
-	int i;
+	int	i;
 
 	if (!cmd || !cmd->args)
 		return (0);
@@ -24,41 +24,50 @@ int	check_export(t_cmd *cmd)
 		if (!cmd->args[i][0])
 			return (0);
 		if (!ft_isalpha(cmd->args[i][0]) && cmd->args[i][0] != '_')
-			return (ft_fprintf(2, "minishell: export: '%s': not a valid identifier\n", cmd->args[i]), 1);
+			return (ft_fprintf(2, "minishell: export: '%s':' "
+					"not a valid identifier\n", cmd->args[i]), 1);
 		i++;
 	}
 	return (0);
 }
 
-int	handle_export(t_cmd *cmd, t_envp *env, t_gc *gc)
+static void	process_arg(char *arg, t_shell *s, t_gc *gc)
 {
-	int		i;
 	char	*key;
 	char	*value;
 	char	*eq;
 
-	i = 1;
-	if (check_export(cmd))
-		return (1);
-	while (cmd->args[i])
+	eq = ft_strchr(arg, '=');
+	if (eq)
 	{
-		eq = ft_strchr(cmd->args[i], '=');
-		if (eq)
-		{
-			key = gc_strndup(gc, cmd->args[i], eq - cmd->args[i]);
-			value = gc_strdup(gc, eq + 1);
-			update_env(env, key, value, gc);
-		}
-		else
-		{
-			key = gc_strdup(gc, cmd->args[i]);
-			if (!get_env_value(env, key))
-				update_env(env, key, NULL, gc);
-		}
-		i++;
+		key = gc_strndup(gc, arg, eq - arg);
+		value = gc_strdup(gc, eq + 1);
+		update_env(s->env, key, value, gc);
 	}
-	if (!cmd->args[1])
-		handle_env(env, 1);
-	return (0);
+	else
+	{
+		key = gc_strdup(gc, arg);
+		if (!get_env_value(s->env, key))
+			update_env(s->env, key, NULL, gc);
+	}
 }
 
+int	handle_export(t_cmd *cmd, t_shell *s, t_gc *gc)
+{
+	int		i;
+
+	if (check_export(cmd))
+		return (1);
+	if (!cmd->args[1])
+	{
+		handle_env(s, 1);
+		return (0);
+	}
+	i = 1;
+	while (cmd->args[i])
+	{
+		process_arg(cmd->args[i], s, gc);
+		i++;
+	}
+	return (0);
+}

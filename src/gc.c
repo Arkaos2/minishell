@@ -59,6 +59,8 @@ void	gc_destroy(t_gc *gc)
 	t_gcnode	*cur;
 	t_gcnode	*next;
 
+	if (!gc)
+		return ;
 	cur = gc->head;
 	while (cur)
 	{

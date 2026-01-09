@@ -6,7 +6,7 @@
 /*   By: pmalumba <pmalumba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/06 20:14:04 by pmalumba         ###   ########.fr       */
+/*   Updated: 2026/01/09 17:40:36 by pmalumba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 
 # include "ft_fprintf/ft_fprintf.h"
 # include "libft/libft.h"
-# include "sys/wait.h"
+# include <errno.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
 
 extern volatile sig_atomic_t	g_last_signal;
@@ -57,6 +60,7 @@ typedef struct s_redir
 	t_redir_type				type;
 	char						*file;
 	char						*heredoc_content;
+	int							quoted;
 	struct s_redir				*next;
 }								t_redir;
 
@@ -105,8 +109,27 @@ typedef struct s_shell
 	t_gc						*gc_tmp;
 }								t_shell;
 
+int								process_interactive_line(t_shell *shell,
+									char *line);
+void							run_non_interactive(char **envp);
+int								process_interactive_line(t_shell *shell,
+									char *line);
+int								handle_readline(t_shell *shell, char **line);
+void							run_interactive(t_shell *shell);
+
+t_redir							*alloc_redir_with_file(t_token *tok,
+									t_shell *shell);
+void							set_redir_type(t_redir *node, t_token *tok);
+
+int								redir_outxappend(t_token **tok, char *str,
+									int *i, t_gc *gc);
+t_shell							*init_struct(void);
 int								fill_all_heredocs(t_shell *shell);
 int								setup_heredoc_input(t_shell *shell, t_cmd *cmd);
+int								tokenpipe(t_token **tok, char *str, int *i,
+									t_gc *gc);
+int								redir_inxheredoc(t_token **tok, char *str,
+									int *i, t_gc *gc);
 
 t_gc							*gc_new(void);
 void							*gc_calloc(t_gc *gc, size_t size);
@@ -132,7 +155,6 @@ t_envp							*create_envp(t_gc *gc, char **envp);
 t_envp							*check_node(t_gc *gc, char *envp);
 
 int								is_whitespace(char *s);
-int								redirs_syntax(t_token *tok);
 
 char							*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int								is_absolute_path(char *cmd);
@@ -149,7 +171,7 @@ void							safe_exit(t_shell *s, int code);
 int								is_builtin(char *cmd);
 int								handle_builtin(t_cmd *cmd, t_shell *shell);
 int								handle_echo(t_cmd *cmd);
-int								handle_env(t_envp *env, int flag);
+int								handle_env(t_shell *s, int flag);
 void							update_env(t_envp *env, char *key, char *value,
 									t_gc *gc);
 char							*get_env_value(t_envp *env, char *key);
@@ -158,8 +180,7 @@ void							add_env_var(t_shell *shell, char *key,
 									char *value);
 int								handle_cd(t_cmd *cmd, t_envp *envp, t_gc *gc);
 int								handle_pwd(t_envp *env);
-int								handle_export(t_cmd *cmd, t_envp *env,
-									t_gc *gc);
+int								handle_export(t_cmd *cmd, t_shell *s, t_gc *gc);
 int								handle_unset(t_cmd *cmd, t_envp *env, t_gc *gc);
 int								handle_exit(t_cmd *cmd, t_shell *shell);
 
@@ -172,6 +193,10 @@ void							close_all_pipes(int **pipes, int n);
 int								ultime_lexing(t_token **tok, char *str,
 									t_gc *gc, t_shell *s);
 
+t_token							*last_token(t_token *tok);
+int								append_word(t_token **tok, t_gc *gc,
+									char *value, int quoted);
+
 int								ultime_filler(t_shell *s);
 
 t_token							*lstnew_token(t_gc *gc, char *value,
@@ -181,6 +206,10 @@ t_redir							*lstnew_redir(t_gc *gc, char *value,
 void							lstadd_backredir(t_redir **lst, t_redir *new);
 void							lstadd_backtok(t_token **lst, t_token *new);
 
+int								redirs_syntax(t_shell *shell);
+int								process_token(t_token **tok, char *str, int *v,
+									t_gc *gc);
+int								is_separator(char c);
 char							*expand_dollars(t_shell *s, char *str);
 int								check_syntaxe(char *str);
 void							reset_element(t_shell *shell);
@@ -188,10 +217,9 @@ char							**fill_array(t_shell *shell, char **old_array,
 									char *new);
 t_cmd							*init_cmd(t_shell *shell);
 
-int								double_quotes(t_token **tok, char *str, int *i,
-									t_gc *gc);
-int								single_quote(t_token **tok, char *str, int *i,
-									t_gc *gc);
+char							*double_quotes(char *str, int *i, t_gc *gc);
+char							*append_char(t_gc *gc, char *str, char c);
+char							*single_quote(char *str, int *i, t_gc *gc);
 int								handle_quotes(t_token **tok, char *str, int *i,
 									t_shell *s);
 t_cmd							*handle_pipe(t_shell *s, t_cmd *cmd);
