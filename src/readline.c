@@ -86,8 +86,6 @@ int	process_interactive_line(t_shell *shell, char *line)
 
 int	handle_readline(t_shell *shell, char **line)
 {
-	// int	ret;
-
 	g_last_signal = 0;
 	*line = readline("minishell: ");
 	if (!*line)
@@ -96,12 +94,5 @@ int	handle_readline(t_shell *shell, char **line)
 		shell->exec->last_exit = 130;
 	if (**line && !is_whitespace(*line))
 		add_history(*line);
-	// ret = check_syntaxe(*line);
-	// if (ret != 1)
-	// {
-	// 	if (ret == 2)
-	// 		shell->exec->last_exit = 2;
-	// 	return (-1);
-	// }
 	return (1);
 }

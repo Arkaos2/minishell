@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:19:46 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/08 18:50:01 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:48:08 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,29 +45,28 @@ int	redir_outxappend(t_token **tok, char *str, int *i, t_gc *gc)
 
 int	redirs_syntax(t_shell *shell)
 {
-	t_token	*tok;
+	t_token	*t;
 
 	if (!shell)
 		return (0);
-	tok = shell->tok;
-	while (tok)
+	t = shell->tok;
+	while (t)
 	{
-		if (tok->type == TOKEN_PIPE)
+		if (t->type == TOKEN_PIPE)
 		{
-			if (!tok->next || tok->next->type == TOKEN_PIPE)
+			if (!t->next || t->next->type == TOKEN_PIPE)
 				return (shell->exec->last_exit = 2,
 					ft_fprintf(2,
 						"bash: syntax error near unexpected token `|'\n"), 0);
 		}
-		if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_HEREDOC)
+		if (t->type >= TOKEN_REDIR_IN && t->type <= TOKEN_HEREDOC)
 		{
-			if (!tok->next || tok->next->type != TOKEN_WORD)
+			if (!t->next || t->next->type != TOKEN_WORD)
 				return (shell->exec->last_exit = 2,
-					ft_fprintf(2,"bash: syntax error "),
-					ft_fprintf(2,"near unexpected token `%s'\n", tok->value), 0);
-
+					ft_fprintf(2, "bash: syntax error "),
+					ft_fprintf(2, "near unexpected token `%s'\n", t->value), 0);
 		}
-		tok = tok->next;
+		t = t->next;
 	}
 	return (1);
 }
@@ -87,7 +86,6 @@ t_redir	*alloc_redir_with_file(t_token *tok, t_shell *shell)
 	node->next = NULL;
 	return (node);
 }
-
 
 void	set_redir_type(t_redir *node, t_token *tok)
 {

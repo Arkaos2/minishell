@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/09 19:18:28 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:50:26 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 
 t_redir	*pre_fill_redirs(t_token *tok, t_shell *shell)
 {
-	t_redir *node;
+	t_redir	*node;
 
 	node = alloc_redir_with_file(tok, shell);
 	if (!node)

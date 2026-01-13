@@ -6,19 +6,20 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 18:00:00 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 18:25:02 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:46:24 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *process_heredoc_line(t_shell *shell, char *line, int expand)
+static char	*process_heredoc_line(t_shell *shell, char *line, int expand)
 {
-	char *part;
+	char	*part;
+	char	*tmp;
 
 	if (expand)
 	{
-		char *tmp = expand_dollars(shell, line);
+		tmp = expand_dollars(shell, line);
 		if (!tmp)
 			return (NULL);
 		part = gc_strdup(shell->gc, tmp);
@@ -34,11 +35,11 @@ static char *process_heredoc_line(t_shell *shell, char *line, int expand)
 	return (part);
 }
 
-static char *read_heredoc_content(t_shell *shell, char *delimiter, int expand)
+static char	*read_heredoc(t_shell *shell, char *delimiter, int expand)
 {
-	char *line;
-	char *content;
-	char *part;
+	char	*line;
+	char	*content;
+	char	*part;
 
 	content = gc_strdup(shell->gc, "");
 	heredoc_signal_distributor();
@@ -50,7 +51,7 @@ static char *read_heredoc_content(t_shell *shell, char *delimiter, int expand)
 		if (g_last_signal == SIGINT)
 			return (free(line), signal_distributor(), NULL);
 		if (!line)
-			break;
+			break ;
 		if (ft_strcmp(line, delimiter) == 0)
 			return (free(line), signal_distributor(), content);
 		part = process_heredoc_line(shell, line, expand);
@@ -72,7 +73,7 @@ static int	fill_cmd_heredocs(t_shell *shell, t_cmd *cmd)
 	{
 		if (r->type == R_HEREDOC)
 		{
-				r->heredoc_content = read_heredoc_content(shell, r->file, !r->quoted);
+				r->heredoc_content = read_heredoc(shell, r->file, !r->quoted);
 			if (r->heredoc_content == NULL)
 				return (-1);
 		}

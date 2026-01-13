@@ -6,7 +6,7 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2026/01/05 20:19:27 by saibelab         ###   ########.fr        #
+#    Updated: 2026/01/13 15:50:06 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,8 @@ SRCS			= src/main.c \
 			src/exec/run_process.c \
 			src/readline.c \
 			src/signals/signals_utils.c \
-			src/exec/child.c 
+			src/exec/child.c \
+			src/parse/utils.c
 
 OBJS			= $(SRCS:.c=.o)
 

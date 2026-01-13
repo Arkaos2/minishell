@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:14:59 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/09 19:14:50 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:53:05 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ int			process_interactive_line(t_shell *shell, char *line);
 int			handle_readline(t_shell *shell, char **line);
 void		run_interactive(t_shell *shell);
 
-
 t_redir		*alloc_redir_with_file(t_token *tok, t_shell *shell);
 void		set_redir_type(t_redir *node, t_token *tok);
 
@@ -145,7 +144,12 @@ char		*key_finder(t_gc *gc, char *envp);
 t_envp		*create_envp(t_gc *gc, char **envp);
 t_envp		*check_node(t_gc *gc, char *envp);
 
+int			is_separator(char c);
+char		*append_char(t_gc *gc, char *str, char c);
 int			is_whitespace(char *s);
+int			process_token(t_token **tok, char *str, int *v, t_gc *gc);
+int			tokenword(t_token **tok, char *str, int *i, t_shell *s);
+
 
 char		*get_cmd_path(char *cmd, t_envp *env, t_gc *gc);
 int			is_absolute_path(char *cmd);
