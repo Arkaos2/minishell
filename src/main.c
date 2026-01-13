@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 19:15:48 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/05 20:03:02 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:31:32 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	run_interactive(t_shell *shell)
 		}
 		reset_element(shell);
 		free(line);
-		printf("%d ", shell->exec->last_exit);
 	}
 }
 
@@ -84,8 +83,6 @@ int	main(int argc, char **argv, char **envp)
 		write(STDERR_FILENO, "minishell: too many arguments\n", 30);
 		return (1);
 	}
-	if (!isatty(STDIN_FILENO))
-		return (run_non_interactive(envp), 0);
 	shell = init_struct();
 	if (!shell)
 		return (1);

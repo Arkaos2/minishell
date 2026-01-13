@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 15:26:23 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/08 16:33:46 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:31:09 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@ char	*key_finder(t_gc *gc, char *envp)
 	char	*key;
 
 	i = 0;
-	while (envp[i] != '=')
+	if (!envp)
+		return (NULL);
+	while (envp[i] && envp[i] != '=')
 		i++;
+	if (!envp[i])
+		return (NULL);
 	key = gc_strndup(gc, envp, i);
+	if (!key)
+		return (NULL);
 	i = -1;
 	while (key[++i])
 		if (!ft_isalnum(key[i]) && key[i] != '_')

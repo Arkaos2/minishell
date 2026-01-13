@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:23:51 by pmalumba          #+#    #+#             */
-/*   Updated: 2026/01/13 15:50:26 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:03:32 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	fill_args(t_token *tok, t_shell *shell, t_cmd *cmd)
 
 	if (!tok || tok->type != TOKEN_WORD)
 		return (0);
-	if (shell->tok->quote == 1)
+	if (tok->quote == 1)
 	{
 		res = gc_strdup(shell->gc, tok->value);
 		if (!res)

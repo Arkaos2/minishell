@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:45:01 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/13 15:52:46 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:31:20 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	redir_inxheredoc(t_token **tok, char *str, int *i, t_gc *gc)
 	return (1);
 }
 
-static char	*extract_word_content(char *str, int *i, t_shell *s)
+static char	*extract_word_content(char *str, int *i, t_shell *s, int *quotes)
 {
 	char	*word;
 	char	*tmp;
@@ -51,7 +51,7 @@ static char	*extract_word_content(char *str, int *i, t_shell *s)
 				tmp = double_quotes(str, i, s->gc_tmp);
 			else
 			{
-				s->tok->quote = 1;
+				*quotes = 1;
 				tmp = single_quote(str, i, s->gc_tmp);
 			}
 			if (!tmp)
@@ -68,13 +68,17 @@ int	tokenword(t_token **tok, char *str, int *i, t_shell *s)
 {
 	char	*final_word;
 	t_token	*node;
+	int		quotes;
 
-	final_word = extract_word_content(str, i, s);
+	quotes = 0;
+	final_word = extract_word_content(str, i, s, &quotes);
 	if (!final_word)
 		return (0);
 	node = lstnew_token(s->gc_tmp, final_word, TOKEN_WORD);
 	if (!node)
 		return (0);
+	if (quotes)
+		node->quote = 1;
 	lstadd_backtok(tok, node);
 	return (1);
 }

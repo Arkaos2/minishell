@@ -6,9 +6,11 @@
 #    By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:56:32 by saibelab          #+#    #+#              #
-#    Updated: 2026/01/13 15:50:06 by saibelab         ###   ########.fr        #
+#    Updated: 2026/01/13 18:34:55 by saibelab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+#vege --trace-children=yes --suppressions=readline.supp ./minishell
 
 NAME			= minishell
 CC				= cc
