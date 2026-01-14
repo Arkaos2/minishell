@@ -6,7 +6,7 @@
 /*   By: saibelab <saibelab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:35:29 by saibelab          #+#    #+#             */
-/*   Updated: 2026/01/13 18:35:31 by saibelab         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:51:12 by saibelab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,12 @@ int	key_len(char *s)
 	i = 0;
 	if (!s)
 		return (0);
+	if (ft_isdigit(s[0]))
+	{
+		while (s[i] && ft_isdigit(s[i]))
+			i++;
+		return (i);
+	}
 	while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 		i++;
 	return (i);
